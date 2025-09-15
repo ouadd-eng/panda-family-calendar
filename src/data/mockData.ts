@@ -1,4 +1,3 @@
-
 import { TimeSlot, getUniqueId } from '../utils/calendarUtils';
 import { addDays, format, getWeek, getWeekOfMonth } from 'date-fns';
 
@@ -9,1056 +8,680 @@ export const generateMockTimeSlots = (currentDate: Date): TimeSlot[] => {
   // Get the week number of the current date to determine which week's data to show
   const currentWeekNumber = getWeek(currentDate);
   
-  // Projects
-  const projects = [
-    'Oceanview Residences',
-    'Highland Park Towers',
-    'Central Heights Condos',
-    'Riverside Apartments',
-    'Metro Lofts',
-    'Parkside Gardens',
-    'Sunset Hills Estate',
-    'Downtown Collection',
+  // Family Events & Activities
+  const familyEvents = [
+    'Soccer Practice',
+    'Piano Lessons', 
+    'Work Meeting',
+    'Dentist Appointment',
+    'Birthday Party',
+    'School Event',
+    'Family Dinner',
+    'Grocery Shopping',
+    'Swimming Lessons',
+    'Parent-Teacher Conference',
+    'Homework Time',
+    'Movie Night',
+    'Playdate',
+    'Basketball Practice',
+    'Art Class',
+    'Doctor Visit',
+    'Team Project Meeting',
+    'Cooking Together',
+    'Reading Time',
+    'Dance Class',
+    'Study Group',
+    'Math Tutoring',
+    'Client Presentation',
+    'Board Meeting',
+    'Yoga Class',
+    'Book Club',
+    'Guitar Practice',
+    'Science Fair',
+    'Karate Class',
+    'Shopping with Friends'
   ];
   
   // Locations
   const locations = [
-    'Main Office',
-    'On-site Location',
-    'Client Office',
-    'Virtual Meeting',
-    'Property Site',
+    'Home',
+    'School',
+    'Soccer Field', 
+    'Music Studio',
+    'Office',
+    'Doctor\'s Office',
+    'Community Center',
+    'Library',
+    'Park',
+    'Mall',
+    'Dance Studio',
+    'Restaurant',
+    'Gym',
+    'Pool',
+    'Friend\'s House',
+    'Karate Dojo',
+    'Tutor Center',
+    'Coffee Shop',
+    'Conference Room'
   ];
 
-  // Brokers
-  const brokers = [
-    'Sarah Johnson',
-    'Michael Chen',
-    'Emma Williams',
-    'David Rodriguez',
-    'Jessica Kim',
-    'Robert Taylor',
-    'Lisa Garcia',
-    'John Smith',
+  // Family Members
+  const familyMembers = [
+    'Lisa (Mom)',
+    'Ahmed (Dad)', 
+    'Selma (16)',
+    'Youssef (12)',
+    'Sofia (8)'
   ];
 
   // Generate first week's data
   if (currentWeekNumber % 2 === 0) {
-    // First week data (Even weeks)
-    // Property time slots (existing slots)
+    // Monday Events
     mockSlots.push(
+      // Lisa's work meeting
       {
         id: getUniqueId(),
         startTime: '09:00',
-        endTime: '11:00',
-        day: 1, // Monday
-        projectName: projects[0],
-        location: locations[0],
-        isBooked: true,
-        parties: 2,
-        duration: 20,
-        broker: brokers[0],
-      },
-      {
-        id: getUniqueId(),
-        startTime: '13:30',
-        endTime: '15:00',
-        day: 1, // Monday
-        projectName: projects[1],
-        location: locations[2],
-        isBooked: false,
-        parties: 3,
-        duration: 30,
-        broker: brokers[1],
-      },
-      // Adding overlapping slots for Monday
-      {
-        id: getUniqueId(),
-        startTime: '09:30',
         endTime: '10:30',
-        day: 1, // Monday - overlaps with Oceanview
-        projectName: projects[3],
-        location: locations[1],
+        day: 1,
+        projectName: 'Team Strategy Meeting',
+        location: locations[4], // Office
         isBooked: true,
-        parties: 1,
-        duration: 15,
-        broker: brokers[3],
+        parties: 5,
+        duration: 90,
+        broker: familyMembers[0], // Lisa
       },
-      {
-        id: getUniqueId(),
-        startTime: '10:00',
-        endTime: '11:30',
-        day: 1, // Monday - overlaps with Oceanview
-        projectName: projects[5],
-        location: locations[0],
-        isBooked: false,
-        parties: 2,
-        duration: 25,
-        broker: brokers[5],
-      },
+      // Ahmed's client call
       {
         id: getUniqueId(),
         startTime: '14:00',
-        endTime: '15:30',
-        day: 1, // Monday - overlaps with Highland Park
-        projectName: projects[7],
-        location: locations[4],
-        isBooked: true,
-        parties: 4,
-        duration: 15,
-        broker: brokers[7],
-      }
-    );
-
-    // Tuesday slots (day 2)
-    mockSlots.push(
-      {
-        id: getUniqueId(),
-        startTime: '10:00',
-        endTime: '12:30',
-        day: 2, // Tuesday
-        projectName: projects[2],
-        location: locations[1],
-        isBooked: true,
-        parties: 1,
-        duration: 25,
-        broker: brokers[2],
-      },
-      {
-        id: getUniqueId(),
-        startTime: '15:00',
-        endTime: '16:00',
-        day: 2, // Tuesday
-        projectName: projects[3],
-        location: locations[0],
-        isBooked: false,
-        parties: 2,
-        duration: 30,
-        broker: brokers[3],
-      },
-      // Adding overlapping slots for Tuesday
-      {
-        id: getUniqueId(),
-        startTime: '11:00',
-        endTime: '13:00',
-        day: 2, // Tuesday - overlaps with Central Heights
-        projectName: projects[6],
-        location: locations[3],
+        endTime: '15:00',
+        day: 1,
+        projectName: 'Client Presentation',
+        location: locations[18], // Conference Room
         isBooked: true,
         parties: 3,
-        duration: 20,
-        broker: brokers[6],
+        duration: 60,
+        broker: familyMembers[1], // Ahmed
       },
+      // Selma's study group
       {
         id: getUniqueId(),
-        startTime: '11:30',
-        endTime: '12:45',
-        day: 2, // Tuesday - overlaps with Central Heights and Sunset Hills
-        projectName: projects[4],
-        location: locations[2],
-        isBooked: false,
-        parties: 1,
-        duration: 15,
-        broker: brokers[4],
+        startTime: '16:00',
+        endTime: '18:00',
+        day: 1,
+        projectName: 'AP Chemistry Study Group',
+        location: locations[7], // Library
+        isBooked: true,
+        parties: 4,
+        duration: 120,
+        broker: familyMembers[2], // Selma
       },
+      // Youssef's soccer practice
+      {
+        id: getUniqueId(),
+        startTime: '17:00',
+        endTime: '18:30',
+        day: 1,
+        projectName: 'Soccer Practice',
+        location: locations[2], // Soccer Field
+        isBooked: true,
+        parties: 15,
+        duration: 90,
+        broker: familyMembers[3], // Youssef
+      },
+      // Sofia's dance class
       {
         id: getUniqueId(),
         startTime: '15:30',
-        endTime: '16:45',
-        day: 2, // Tuesday - overlaps with Riverside Apartments
-        projectName: projects[7],
-        location: locations[4],
+        endTime: '16:30',
+        day: 1,
+        projectName: 'Ballet Class',
+        location: locations[10], // Dance Studio
         isBooked: true,
-        parties: 2,
-        duration: 20,
-        broker: brokers[7],
+        parties: 8,
+        duration: 60,
+        broker: familyMembers[4], // Sofia
       }
     );
 
-    // Wednesday slots (day 3)
+    // Tuesday Events
     mockSlots.push(
+      // Lisa's yoga class
       {
         id: getUniqueId(),
-        startTime: '09:30',
-        endTime: '11:30',
-        day: 3, // Wednesday
-        projectName: projects[4],
-        location: locations[3],
-        isBooked: false,
-        parties: 2,
+        startTime: '07:00',
+        endTime: '08:00',
+        day: 2,
+        projectName: 'Morning Yoga',
+        location: locations[12], // Gym
+        isBooked: true,
+        parties: 12,
         duration: 60,
-        broker: brokers[4],
+        broker: familyMembers[0], // Lisa
       },
-      // Adding more overlapping slots for Wednesday
+      // Ahmed's board meeting
       {
         id: getUniqueId(),
         startTime: '10:00',
         endTime: '12:00',
-        day: 3, // Wednesday - overlaps with Metro Lofts
-        projectName: projects[2],
-        location: locations[1],
+        day: 2,
+        projectName: 'Board Meeting',
+        location: locations[4], // Office
         isBooked: true,
-        parties: 3,
-        duration: 30,
-        broker: brokers[2],
+        parties: 8,
+        duration: 120,
+        broker: familyMembers[1], // Ahmed
       },
+      // Selma's piano lesson
       {
         id: getUniqueId(),
-        startTime: '10:30',
-        endTime: '11:45',
-        day: 3, // Wednesday - overlaps with Metro Lofts and Central Heights
-        projectName: projects[0],
-        location: locations[0],
-        isBooked: false,
-        parties: 1,
-        duration: 15,
-        broker: brokers[0],
-      },
-      {
-        id: getUniqueId(),
-        startTime: '11:00',
-        endTime: '12:30',
-        day: 3, // Wednesday - complex overlap with multiple events
-        projectName: projects[1],
-        location: locations[2],
-        isBooked: true,
-        parties: 2,
-        duration: 20,
-        broker: brokers[1],
-      }
-    );
-
-    // Thursday slots (day 4)
-    mockSlots.push(
-      {
-        id: getUniqueId(),
-        startTime: '08:00',
-        endTime: '10:00',
-        day: 4, // Thursday
-        projectName: projects[5],
-        location: locations[4],
-        isBooked: true,
-        parties: 3,
-        duration: 40,
-        broker: brokers[5],
-      },
-      {
-        id: getUniqueId(),
-        startTime: '14:00',
-        endTime: '16:30',
-        day: 4, // Thursday
-        projectName: projects[0],
-        location: locations[2],
-        isBooked: true,
-        parties: 4,
-        duration: 15,
-        broker: brokers[0],
-      },
-      // Adding overlapping slots for Thursday
-      {
-        id: getUniqueId(),
-        startTime: '09:00',
-        endTime: '10:30',
-        day: 4, // Thursday - overlaps with Parkside Gardens
-        projectName: projects[3],
-        location: locations[1],
-        isBooked: false,
-        parties: 2,
-        duration: 30,
-        broker: brokers[3],
-      },
-      {
-        id: getUniqueId(),
-        startTime: '08:30',
-        endTime: '09:45',
-        day: 4, // Thursday - overlaps with Parkside Gardens
-        projectName: projects[1],
-        location: locations[3],
+        startTime: '16:00',
+        endTime: '17:00',
+        day: 2,
+        projectName: 'Piano Lessons',
+        location: locations[3], // Music Studio
         isBooked: true,
         parties: 1,
-        duration: 15,
-        broker: brokers[1],
+        duration: 60,
+        broker: familyMembers[2], // Selma
       },
-      {
-        id: getUniqueId(),
-        startTime: '14:30',
-        endTime: '16:00',
-        day: 4, // Thursday - overlaps with Oceanview
-        projectName: projects[2],
-        location: locations[0],
-        isBooked: false,
-        parties: 3,
-        duration: 20,
-        broker: brokers[2],
-      },
+      // Youssef's math tutoring
       {
         id: getUniqueId(),
         startTime: '15:00',
-        endTime: '17:00',
-        day: 4, // Thursday - overlaps with Oceanview and Central Heights
-        projectName: projects[7],
-        location: locations[4],
+        endTime: '16:00',
+        day: 2,
+        projectName: 'Math Tutoring',
+        location: locations[16], // Tutor Center
+        isBooked: true,
+        parties: 1,
+        duration: 60,
+        broker: familyMembers[3], // Youssef
+      },
+      // Sofia's playdate
+      {
+        id: getUniqueId(),
+        startTime: '14:00',
+        endTime: '16:00',
+        day: 2,
+        projectName: 'Playdate with Emma',
+        location: locations[14], // Friend's House
         isBooked: true,
         parties: 2,
-        duration: 30,
-        broker: brokers[7],
+        duration: 120,
+        broker: familyMembers[4], // Sofia
       }
     );
 
-    // Friday slots (day 5)
+    // Wednesday Events
     mockSlots.push(
+      // Family dentist appointments
       {
         id: getUniqueId(),
-        startTime: '11:00',
-        endTime: '13:00',
-        day: 5, // Friday
-        projectName: projects[6],
-        location: locations[1],
-        isBooked: false,
-        parties: 2,
-        duration: 30,
-        broker: brokers[6],
-      },
-      {
-        id: getUniqueId(),
-        startTime: '15:30',
-        endTime: '17:00',
-        day: 5, // Friday
-        projectName: projects[7],
-        location: locations[0],
+        startTime: '10:00',
+        endTime: '11:00',
+        day: 3,
+        projectName: 'Sofia\'s Dentist Appointment',
+        location: locations[5], // Doctor's Office
         isBooked: true,
-        parties: 1,
-        duration: 90,
-        broker: brokers[7],
+        parties: 2,
+        duration: 60,
+        broker: familyMembers[4], // Sofia
       },
-      // Adding overlapping slots for Friday
       {
         id: getUniqueId(),
         startTime: '11:30',
-        endTime: '12:45',
-        day: 5, // Friday - overlaps with Sunset Hills
-        projectName: projects[4],
-        location: locations[2],
+        endTime: '12:30',
+        day: 3,
+        projectName: 'Youssef\'s Dentist Appointment',
+        location: locations[5], // Doctor's Office
         isBooked: true,
-        parties: 3,
-        duration: 25,
-        broker: brokers[4],
+        parties: 2,
+        duration: 60,
+        broker: familyMembers[3], // Youssef
       },
+      // Ahmed's work from home
       {
         id: getUniqueId(),
-        startTime: '12:00',
-        endTime: '13:30',
-        day: 5, // Friday - overlaps with Sunset Hills and Metro Lofts
-        projectName: projects[0],
-        location: locations[4],
-        isBooked: false,
-        parties: 2,
-        duration: 15,
-        broker: brokers[0],
+        startTime: '09:00',
+        endTime: '17:00',
+        day: 3,
+        projectName: 'Work from Home',
+        location: locations[0], // Home
+        isBooked: true,
+        parties: 1,
+        duration: 480,
+        broker: familyMembers[1], // Ahmed
       },
+      // Selma's basketball practice
+      {
+        id: getUniqueId(),
+        startTime: '17:30',
+        endTime: '19:00',
+        day: 3,
+        projectName: 'Basketball Practice',
+        location: locations[12], // Gym
+        isBooked: true,
+        parties: 12,
+        duration: 90,
+        broker: familyMembers[2], // Selma
+      }
+    );
+
+    // Thursday Events
+    mockSlots.push(
+      // Lisa's book club
+      {
+        id: getUniqueId(),
+        startTime: '19:00',
+        endTime: '21:00',
+        day: 4,
+        projectName: 'Book Club Meeting',
+        location: locations[17], // Coffee Shop
+        isBooked: true,
+        parties: 6,
+        duration: 120,
+        broker: familyMembers[0], // Lisa
+      },
+      // Ahmed's client dinner
+      {
+        id: getUniqueId(),
+        startTime: '18:00',
+        endTime: '20:00',
+        day: 4,
+        projectName: 'Client Dinner',
+        location: locations[11], // Restaurant
+        isBooked: true,
+        parties: 4,
+        duration: 120,
+        broker: familyMembers[1], // Ahmed
+      },
+      // Selma's driving lesson
+      {
+        id: getUniqueId(),
+        startTime: '15:00',
+        endTime: '16:00',
+        day: 4,
+        projectName: 'Driving Lesson',
+        location: locations[0], // Home
+        isBooked: true,
+        parties: 2,
+        duration: 60,
+        broker: familyMembers[2], // Selma
+      },
+      // Youssef's karate class
+      {
+        id: getUniqueId(),
+        startTime: '16:30',
+        endTime: '17:30',
+        day: 4,
+        projectName: 'Karate Class',
+        location: locations[15], // Karate Dojo
+        isBooked: true,
+        parties: 10,
+        duration: 60,
+        broker: familyMembers[3], // Youssef
+      },
+      // Sofia's swimming lesson
+      {
+        id: getUniqueId(),
+        startTime: '16:00',
+        endTime: '17:00',
+        day: 4,
+        projectName: 'Swimming Lessons',
+        location: locations[13], // Pool
+        isBooked: true,
+        parties: 6,
+        duration: 60,
+        broker: familyMembers[4], // Sofia
+      }
+    );
+
+    // Friday Events
+    mockSlots.push(
+      // Family movie night preparation
+      {
+        id: getUniqueId(),
+        startTime: '18:00',
+        endTime: '21:00',
+        day: 5,
+        projectName: 'Family Movie Night',
+        location: locations[0], // Home
+        isBooked: true,
+        parties: 5,
+        duration: 180,
+        broker: 'Family',
+      },
+      // Lisa's grocery shopping
       {
         id: getUniqueId(),
         startTime: '16:00',
         endTime: '17:30',
-        day: 5, // Friday - overlaps with Downtown Collection
-        projectName: projects[3],
-        location: locations[3],
+        day: 5,
+        projectName: 'Grocery Shopping',
+        location: locations[9], // Mall
         isBooked: true,
         parties: 1,
-        duration: 30,
-        broker: brokers[3],
-      }
-    );
-
-    // Cross-week events for first week (ending in next week)
-    mockSlots.push(
-      {
-        id: getUniqueId(),
-        startTime: '10:00',
-        endTime: '12:00',
-        day: 5, // Friday of the first week
-        projectName: 'Cross-Week Workshop',
-        location: locations[0],
-        isBooked: true,
-        parties: 6,
-        duration: 120,
-        broker: brokers[0],
-        isCrossWeek: true,
-        endDay: 1, // Ends on Monday of next week
+        duration: 90,
+        broker: familyMembers[0], // Lisa
       },
-      {
-        id: getUniqueId(),
-        startTime: '14:00',
-        endTime: '16:00',
-        day: 5, // Friday of the first week
-        projectName: projects[1],
-        location: locations[2],
-        isBooked: true,
-        parties: 4,
-        duration: 180,
-        broker: brokers[1],
-        isCrossWeek: true,
-        endDay: 2, // Ends on Tuesday of next week
-      }
-    );
-  } else {
-    // Second week data (Odd weeks) - Different pattern for variety
-    // Monday slots (day 1)
-    mockSlots.push(
-      {
-        id: getUniqueId(),
-        startTime: '10:00',
-        endTime: '12:00',
-        day: 1, // Monday
-        projectName: projects[7],
-        location: locations[2],
-        isBooked: true,
-        parties: 3,
-        duration: 30,
-        broker: brokers[7],
-      },
-      {
-        id: getUniqueId(),
-        startTime: '14:00',
-        endTime: '16:00',
-        day: 1, // Monday
-        projectName: projects[4],
-        location: locations[3],
-        isBooked: false,
-        parties: 2,
-        duration: 25,
-        broker: brokers[4],
-      },
-      {
-        id: getUniqueId(),
-        startTime: '11:30',
-        endTime: '13:00',
-        day: 1, // Monday - overlapping
-        projectName: projects[2],
-        location: locations[1],
-        isBooked: true,
-        parties: 1,
-        duration: 20,
-        broker: brokers[2],
-      }
-    );
-
-    // Tuesday slots (day 2)
-    mockSlots.push(
-      {
-        id: getUniqueId(),
-        startTime: '09:00',
-        endTime: '11:00',
-        day: 2, // Tuesday
-        projectName: projects[0],
-        location: locations[0],
-        isBooked: true,
-        parties: 2,
-        duration: 30,
-        broker: brokers[0],
-      },
-      {
-        id: getUniqueId(),
-        startTime: '13:00',
-        endTime: '15:00',
-        day: 2, // Tuesday
-        projectName: projects[5],
-        location: locations[4],
-        isBooked: false,
-        parties: 4,
-        duration: 40,
-        broker: brokers[5],
-      },
-      {
-        id: getUniqueId(),
-        startTime: '10:00',
-        endTime: '12:30',
-        day: 2, // Tuesday - overlapping
-        projectName: projects[3],
-        location: locations[2],
-        isBooked: true,
-        parties: 2,
-        duration: 25,
-        broker: brokers[3],
-      }
-    );
-
-    // Wednesday slots (day 3)
-    mockSlots.push(
-      {
-        id: getUniqueId(),
-        startTime: '10:30',
-        endTime: '12:30',
-        day: 3, // Wednesday
-        projectName: projects[1],
-        location: locations[1],
-        isBooked: true,
-        parties: 3,
-        duration: 30,
-        broker: brokers[1],
-      },
+      // Selma's part-time job
       {
         id: getUniqueId(),
         startTime: '15:00',
-        endTime: '17:00',
-        day: 3, // Wednesday
-        projectName: projects[6],
-        location: locations[3],
-        isBooked: false,
-        parties: 2,
-        duration: 20,
-        broker: brokers[6],
-      },
-      {
-        id: getUniqueId(),
-        startTime: '11:00',
-        endTime: '13:30',
-        day: 3, // Wednesday - overlapping
-        projectName: projects[4],
-        location: locations[0],
+        endTime: '19:00',
+        day: 5,
+        projectName: 'Part-time Job (Cafe)',
+        location: locations[17], // Coffee Shop
         isBooked: true,
         parties: 1,
-        duration: 15,
-        broker: brokers[4],
-      }
-    );
-
-    // Thursday slots (day 4)
-    mockSlots.push(
-      {
-        id: getUniqueId(),
-        startTime: '09:30',
-        endTime: '11:30',
-        day: 4, // Thursday
-        projectName: projects[3],
-        location: locations[2],
-        isBooked: false,
-        parties: 3,
-        duration: 25,
-        broker: brokers[3],
-      },
-      {
-        id: getUniqueId(),
-        startTime: '14:30',
-        endTime: '16:30',
-        day: 4, // Thursday
-        projectName: projects[7],
-        location: locations[4],
-        isBooked: true,
-        parties: 2,
-        duration: 30,
-        broker: brokers[7],
-      },
-      {
-        id: getUniqueId(),
-        startTime: '10:00',
-        endTime: '12:00',
-        day: 4, // Thursday - overlapping
-        projectName: projects[5],
-        location: locations[1],
-        isBooked: false,
-        parties: 1,
-        duration: 20,
-        broker: brokers[5],
-      }
-    );
-
-    // Friday slots (day 5)
-    mockSlots.push(
-      {
-        id: getUniqueId(),
-        startTime: '10:00',
-        endTime: '12:00',
-        day: 5, // Friday
-        projectName: projects[2],
-        location: locations[0],
-        isBooked: true,
-        parties: 2,
-        duration: 25,
-        broker: brokers[2],
-      },
-      {
-        id: getUniqueId(),
-        startTime: '14:00',
-        endTime: '16:00',
-        day: 5, // Friday
-        projectName: projects[0],
-        location: locations[3],
-        isBooked: false,
-        parties: 3,
-        duration: 30,
-        broker: brokers[0],
-      },
-      {
-        id: getUniqueId(),
-        startTime: '11:00',
-        endTime: '13:00',
-        day: 5, // Friday - overlapping
-        projectName: projects[6],
-        location: locations[2],
-        isBooked: true,
-        parties: 1,
-        duration: 15,
-        broker: brokers[6],
-      }
-    );
-
-    // Cross-week events for second week (ending in next week)
-    mockSlots.push(
-      {
-        id: getUniqueId(),
-        startTime: '13:00',
-        endTime: '15:00',
-        day: 5, // Friday of second week
-        projectName: 'Multi-Day Training',
-        location: locations[1],
-        isBooked: true,
-        parties: 5,
         duration: 240,
-        broker: brokers[2],
-        isCrossWeek: true,
-        endDay: 2, // Ends on Tuesday of next week
+        broker: familyMembers[2], // Selma
       },
-      {
-        id: getUniqueId(),
-        startTime: '16:00',
-        endTime: '17:00',
-        day: 5, // Friday of second week
-        projectName: projects[4],
-        location: locations[0],
-        isBooked: false,
-        parties: 2,
-        duration: 120,
-        broker: brokers[4],
-        isCrossWeek: true,
-        endDay: 1, // Ends on Monday of next week
-      }
-    );
-  }
-
-  // Add broker events (personal calendar items)
-  // Common broker events that appear in both weeks
-  // Sarah Johnson's events
-  mockSlots.push(
-    {
-      id: getUniqueId(),
-      startTime: '12:00',
-      endTime: '13:00',
-      day: 1, // Monday
-      projectName: 'Lunch with Client',
-      isBooked: true,
-      broker: brokers[0],
-      isBrokerEvent: true,
-      location: 'Restaurant',
-      parties: 2,
-      duration: 60
-    },
-    {
-      id: getUniqueId(),
-      startTime: '16:00',
-      endTime: '17:00',
-      day: 3, // Wednesday
-      projectName: 'Team Meeting',
-      isBooked: true,
-      broker: brokers[0],
-      isBrokerEvent: true,
-      location: 'Office',
-      parties: 5,
-      duration: 60
-    }
-  );
-  
-  // Michael Chen's events
-  mockSlots.push(
-    {
-      id: getUniqueId(),
-      startTime: '09:00',
-      endTime: '10:00',
-      day: 2, // Tuesday
-      projectName: 'Property Inspection',
-      isBooked: true,
-      broker: brokers[1],
-      isBrokerEvent: true,
-      location: 'Property Site',
-      parties: 1,
-      duration: 60
-    },
-    {
-      id: getUniqueId(),
-      startTime: '14:00',
-      endTime: '15:30',
-      day: 5, // Friday
-      projectName: 'Contract Review',
-      isBooked: true,
-      broker: brokers[1],
-      isBrokerEvent: true,
-      location: 'Office',
-      parties: 2,
-      duration: 90
-    }
-  );
-  
-  // Emma Williams's events
-  mockSlots.push(
-    {
-      id: getUniqueId(),
-      startTime: '13:00',
-      endTime: '14:00',
-      day: 4, // Thursday
-      projectName: 'Client Call',
-      isBooked: true,
-      broker: brokers[2],
-      isBrokerEvent: true,
-      location: 'Virtual',
-      parties: 1,
-      duration: 60
-    }
-  );
-
-  // Week-specific broker events
-  if (currentWeekNumber % 2 === 0) {
-    // Additional broker events for even weeks
-    // Sarah Johnson's events
-    mockSlots.push(
-      {
-        id: getUniqueId(),
-        startTime: '09:30',
-        endTime: '10:30',
-        day: 2, // Tuesday
-        projectName: 'Market Research',
-        isBooked: true,
-        broker: brokers[0],
-        isBrokerEvent: true,
-        location: 'Office',
-        parties: 1,
-        duration: 60
-      },
-      {
-        id: getUniqueId(),
-        startTime: '14:30',
-        endTime: '15:30',
-        day: 5, // Friday
-        projectName: 'Weekly Planning',
-        isBooked: true,
-        broker: brokers[0],
-        isBrokerEvent: true,
-        location: 'Office',
-        parties: 1,
-        duration: 60
-      },
-      // Overlapping with property showing
-      {
-        id: getUniqueId(),
-        startTime: '10:00',
-        endTime: '10:45',
-        day: 1, // Monday - overlaps with Oceanview showing
-        projectName: 'Emergency Call',
-        isBooked: true,
-        broker: brokers[0],
-        isBrokerEvent: true,
-        location: 'Virtual',
-        parties: 1,
-        duration: 45
-      }
-    );
-    
-    // Michael Chen's events
-    mockSlots.push(
-      {
-        id: getUniqueId(),
-        startTime: '11:30',
-        endTime: '12:30',
-        day: 1, // Monday
-        projectName: 'Client Meeting',
-        isBooked: true,
-        broker: brokers[1],
-        isBrokerEvent: true,
-        location: 'Office',
-        parties: 2,
-        duration: 60
-      },
-      {
-        id: getUniqueId(),
-        startTime: '16:00',
-        endTime: '17:00',
-        day: 3, // Wednesday
-        projectName: 'Professional Development',
-        isBooked: true,
-        broker: brokers[1],
-        isBrokerEvent: true,
-        location: 'Training Room',
-        parties: 10,
-        duration: 60
-      },
-      // Overlapping event
-      {
-        id: getUniqueId(),
-        startTime: '14:00',
-        endTime: '14:45',
-        day: 1, // Monday - overlaps with property showing
-        projectName: 'Urgent Client Call',
-        isBooked: true,
-        broker: brokers[1],
-        isBrokerEvent: true,
-        location: 'Virtual',
-        parties: 1,
-        duration: 45
-      }
-    );
-    
-    // Emma Williams's events
-    mockSlots.push(
-      {
-        id: getUniqueId(),
-        startTime: '08:30',
-        endTime: '09:30',
-        day: 1, // Monday
-        projectName: 'Morning Review',
-        isBooked: true,
-        broker: brokers[2],
-        isBrokerEvent: true,
-        location: 'Office',
-        parties: 1,
-        duration: 60
-      },
-      {
-        id: getUniqueId(),
-        startTime: '15:00',
-        endTime: '16:00',
-        day: 3, // Wednesday
-        projectName: 'Marketing Meeting',
-        isBooked: true,
-        broker: brokers[2],
-        isBrokerEvent: true,
-        location: 'Conference Room',
-        parties: 4,
-        duration: 60
-      },
-      {
-        id: getUniqueId(),
-        startTime: '11:00',
-        endTime: '12:30',
-        day: 2, // Tuesday - overlaps with property showing
-        projectName: 'Professional Photoshoot',
-        isBooked: true,
-        broker: brokers[2],
-        isBrokerEvent: true,
-        location: 'Property Site',
-        parties: 3,
-        duration: 90
-      }
-    );
-
-    // Additional brokers' events for even weeks
-    // David Rodriguez's events
-    mockSlots.push(
-      {
-        id: getUniqueId(),
-        startTime: '08:00',
-        endTime: '09:00',
-        day: 1, // Monday
-        projectName: 'Team Breakfast',
-        isBooked: true,
-        broker: brokers[3],
-        isBrokerEvent: true,
-        location: 'Cafe',
-        parties: 6,
-        duration: 60
-      },
-      {
-        id: getUniqueId(),
-        startTime: '12:30',
-        endTime: '13:30',
-        day: 3, // Wednesday
-        projectName: 'Lunch and Learn',
-        isBooked: true,
-        broker: brokers[3],
-        isBrokerEvent: true,
-        location: 'Training Room',
-        parties: 10,
-        duration: 60
-      }
-    );
-
-    // Robert Taylor's events
-    mockSlots.push(
-      {
-        id: getUniqueId(),
-        startTime: '11:00',
-        endTime: '12:00',
-        day: 1, // Monday
-        projectName: 'Property Valuation',
-        isBooked: true,
-        broker: brokers[5],
-        isBrokerEvent: true,
-        location: 'Property Site',
-        parties: 2,
-        duration: 60
-      },
-      {
-        id: getUniqueId(),
-        startTime: '13:30',
-        endTime: '14:30',
-        day: 3, // Wednesday
-        projectName: 'Department Meeting',
-        isBooked: true,
-        broker: brokers[5],
-        isBrokerEvent: true,
-        location: 'Conference Room',
-        parties: 8,
-        duration: 60
-      }
-    );
-  } else {
-    // Additional broker events for odd weeks
-    // Sarah Johnson's odd week events
-    mockSlots.push(
-      {
-        id: getUniqueId(),
-        startTime: '11:00',
-        endTime: '12:00',
-        day: 2, // Tuesday
-        projectName: 'Strategy Session',
-        isBooked: true,
-        broker: brokers[0],
-        isBrokerEvent: true,
-        location: 'Office',
-        parties: 4,
-        duration: 60
-      },
-      {
-        id: getUniqueId(),
-        startTime: '15:00',
-        endTime: '16:00',
-        day: 4, // Thursday
-        projectName: 'Client Presentation',
-        isBooked: true,
-        broker: brokers[0],
-        isBrokerEvent: true,
-        location: 'Conference Room',
-        parties: 5,
-        duration: 60
-      }
-    );
-    
-    // Michael Chen's odd week events
-    mockSlots.push(
-      {
-        id: getUniqueId(),
-        startTime: '10:00',
-        endTime: '11:00',
-        day: 3, // Wednesday
-        projectName: 'Sales Training',
-        isBooked: true,
-        broker: brokers[1],
-        isBrokerEvent: true,
-        location: 'Training Room',
-        parties: 10,
-        duration: 60
-      },
-      {
-        id: getUniqueId(),
-        startTime: '13:00',
-        endTime: '14:00',
-        day: 5, // Friday
-        projectName: 'Team Review',
-        isBooked: true,
-        broker: brokers[1],
-        isBrokerEvent: true,
-        location: 'Office',
-        parties: 6,
-        duration: 60
-      }
-    );
-    
-    // Emma Williams's odd week events
-    mockSlots.push(
-      {
-        id: getUniqueId(),
-        startTime: '09:00',
-        endTime: '10:00',
-        day: 1, // Monday
-        projectName: 'Weekly Kickoff',
-        isBooked: true,
-        broker: brokers[2],
-        isBrokerEvent: true,
-        location: 'Office',
-        parties: 3,
-        duration: 60
-      },
-      {
-        id: getUniqueId(),
-        startTime: '16:00',
-        endTime: '17:00',
-        day: 5, // Friday
-        projectName: 'Market Analysis',
-        isBooked: true,
-        broker: brokers[2],
-        isBrokerEvent: true,
-        location: 'Office',
-        parties: 1,
-        duration: 60
-      }
-    );
-
-    // Additional brokers' odd week events
-    // David Rodriguez's odd week events
-    mockSlots.push(
-      {
-        id: getUniqueId(),
-        startTime: '10:30',
-        endTime: '11:30',
-        day: 2, // Tuesday
-        projectName: 'Virtual Showing',
-        isBooked: true,
-        broker: brokers[3],
-        isBrokerEvent: true,
-        location: 'Virtual',
-        parties: 3,
-        duration: 60
-      },
-      {
-        id: getUniqueId(),
-        startTime: '14:30',
-        endTime: '15:30',
-        day: 4, // Thursday
-        projectName: 'Client Follow-up',
-        isBooked: true,
-        broker: brokers[3],
-        isBrokerEvent: true,
-        location: 'Office',
-        parties: 1,
-        duration: 60
-      }
-    );
-
-    // Jessica Kim's odd week events
-    mockSlots.push(
-      {
-        id: getUniqueId(),
-        startTime: '09:30',
-        endTime: '10:30',
-        day: 1, // Monday
-        projectName: 'Marketing Review',
-        isBooked: true,
-        broker: brokers[4],
-        isBrokerEvent: true,
-        location: 'Conference Room',
-        parties: 4,
-        duration: 60
-      },
+      // Youssef's guitar practice
       {
         id: getUniqueId(),
         startTime: '15:30',
         endTime: '16:30',
-        day: 3, // Wednesday
-        projectName: 'Content Planning',
+        day: 5,
+        projectName: 'Guitar Practice',
+        location: locations[3], // Music Studio
         isBooked: true,
-        broker: brokers[4],
-        isBrokerEvent: true,
-        location: 'Office',
-        parties: 2,
-        duration: 60
+        parties: 1,
+        duration: 60,
+        broker: familyMembers[3], // Youssef
+      }
+    );
+
+    // Weekend prep events spanning into next week
+    mockSlots.push(
+      {
+        id: getUniqueId(),
+        startTime: '14:00',
+        endTime: '16:00',
+        day: 5,
+        projectName: 'Weekend Family Trip Planning',
+        location: locations[0], // Home
+        isBooked: true,
+        parties: 5,
+        duration: 120,
+        broker: 'Family',
+        isCrossWeek: true,
+        endDay: 1, // Continues planning on Monday
+      }
+    );
+
+  } else {
+    // Second week data - Different schedule
+    // Monday Events
+    mockSlots.push(
+      // Ahmed's early morning workout
+      {
+        id: getUniqueId(),
+        startTime: '06:30',
+        endTime: '07:30',
+        day: 1,
+        projectName: 'Morning Workout',
+        location: locations[12], // Gym
+        isBooked: true,
+        parties: 1,
+        duration: 60,
+        broker: familyMembers[1], // Ahmed
+      },
+      // Lisa's team meeting
+      {
+        id: getUniqueId(),
+        startTime: '11:00',
+        endTime: '12:30',
+        day: 1,
+        projectName: 'Project Review Meeting',
+        location: locations[4], // Office
+        isBooked: true,
+        parties: 6,
+        duration: 90,
+        broker: familyMembers[0], // Lisa
+      },
+      // Selma's SAT prep
+      {
+        id: getUniqueId(),
+        startTime: '14:00',
+        endTime: '16:00',
+        day: 1,
+        projectName: 'SAT Prep Class',
+        location: locations[16], // Tutor Center
+        isBooked: true,
+        parties: 8,
+        duration: 120,
+        broker: familyMembers[2], // Selma
+      },
+      // Youssef's science club
+      {
+        id: getUniqueId(),
+        startTime: '15:30',
+        endTime: '16:30',
+        day: 1,
+        projectName: 'Science Club Meeting',
+        location: locations[1], // School
+        isBooked: true,
+        parties: 12,
+        duration: 60,
+        broker: familyMembers[3], // Youssef
+      },
+      // Sofia's art class
+      {
+        id: getUniqueId(),
+        startTime: '16:00',
+        endTime: '17:00',
+        day: 1,
+        projectName: 'Art Class',
+        location: locations[6], // Community Center
+        isBooked: true,
+        parties: 10,
+        duration: 60,
+        broker: familyMembers[4], // Sofia
+      }
+    );
+
+    // Tuesday Events
+    mockSlots.push(
+      // Parent-teacher conferences
+      {
+        id: getUniqueId(),
+        startTime: '16:00',
+        endTime: '16:30',
+        day: 2,
+        projectName: 'Youssef\'s Parent-Teacher Conference',
+        location: locations[1], // School
+        isBooked: true,
+        parties: 3,
+        duration: 30,
+        broker: familyMembers[3], // Youssef
+      },
+      {
+        id: getUniqueId(),
+        startTime: '16:45',
+        endTime: '17:15',
+        day: 2,
+        projectName: 'Sofia\'s Parent-Teacher Conference',
+        location: locations[1], // School
+        isBooked: true,
+        parties: 3,
+        duration: 30,
+        broker: familyMembers[4], // Sofia
+      },
+      // Ahmed's important presentation
+      {
+        id: getUniqueId(),
+        startTime: '14:00',
+        endTime: '15:30',
+        day: 2,
+        projectName: 'Quarterly Business Review',
+        location: locations[18], // Conference Room
+        isBooked: true,
+        parties: 12,
+        duration: 90,
+        broker: familyMembers[1], // Ahmed
+      },
+      // Selma's volunteer work
+      {
+        id: getUniqueId(),
+        startTime: '17:30',
+        endTime: '19:00',
+        day: 2,
+        projectName: 'Volunteer at Animal Shelter',
+        location: locations[6], // Community Center
+        isBooked: true,
+        parties: 1,
+        duration: 90,
+        broker: familyMembers[2], // Selma
+      }
+    );
+
+    // Wednesday Events
+    mockSlots.push(
+      // Mid-week family dinner
+      {
+        id: getUniqueId(),
+        startTime: '18:30',
+        endTime: '20:00',
+        day: 3,
+        projectName: 'Family Dinner at Restaurant',
+        location: locations[11], // Restaurant
+        isBooked: true,
+        parties: 5,
+        duration: 90,
+        broker: 'Family',
+      },
+      // Lisa's doctor appointment
+      {
+        id: getUniqueId(),
+        startTime: '10:00',
+        endTime: '11:00',
+        day: 3,
+        projectName: 'Annual Checkup',
+        location: locations[5], // Doctor's Office
+        isBooked: true,
+        parties: 1,
+        duration: 60,
+        broker: familyMembers[0], // Lisa
+      },
+      // Youssef's basketball game
+      {
+        id: getUniqueId(),
+        startTime: '16:00',
+        endTime: '17:30',
+        day: 3,
+        projectName: 'Basketball Game vs Eagles',
+        location: locations[12], // Gym
+        isBooked: true,
+        parties: 25,
+        duration: 90,
+        broker: familyMembers[3], // Youssef
+      }
+    );
+
+    // Thursday Events  
+    mockSlots.push(
+      // Ahmed's golf meeting
+      {
+        id: getUniqueId(),
+        startTime: '13:00',
+        endTime: '16:00',
+        day: 4,
+        projectName: 'Business Golf Meeting',
+        location: locations[8], // Park
+        isBooked: true,
+        parties: 4,
+        duration: 180,
+        broker: familyMembers[1], // Ahmed
+      },
+      // Selma's college prep meeting
+      {
+        id: getUniqueId(),
+        startTime: '15:00',
+        endTime: '16:00',
+        day: 4,
+        projectName: 'College Counselor Meeting',
+        location: locations[1], // School
+        isBooked: true,
+        parties: 3,
+        duration: 60,
+        broker: familyMembers[2], // Selma
+      },
+      // Sofia's friend's birthday party
+      {
+        id: getUniqueId(),
+        startTime: '15:30',
+        endTime: '17:30',
+        day: 4,
+        projectName: 'Lily\'s Birthday Party',
+        location: locations[14], // Friend's House
+        isBooked: true,
+        parties: 10,
+        duration: 120,
+        broker: familyMembers[4], // Sofia
+      }
+    );
+
+    // Friday Events
+    mockSlots.push(
+      // Lisa's team building
+      {
+        id: getUniqueId(),
+        startTime: '14:00',
+        endTime: '18:00',
+        day: 5,
+        projectName: 'Team Building Event',
+        location: locations[8], // Park
+        isBooked: true,
+        parties: 15,
+        duration: 240,
+        broker: familyMembers[0], // Lisa
+      },
+      // Ahmed's networking event
+      {
+        id: getUniqueId(),
+        startTime: '18:30',
+        endTime: '21:00',
+        day: 5,
+        projectName: 'Business Networking Event',
+        location: locations[11], // Restaurant
+        isBooked: true,
+        parties: 40,
+        duration: 150,
+        broker: familyMembers[1], // Ahmed
+      },
+      // Kids' homework time
+      {
+        id: getUniqueId(),
+        startTime: '16:00',
+        endTime: '18:00',
+        day: 5,
+        projectName: 'Family Homework Time',
+        location: locations[0], // Home
+        isBooked: true,
+        parties: 3,
+        duration: 120,
+        broker: 'Kids',
+      }
+    );
+
+    // Weekend preparation
+    mockSlots.push(
+      {
+        id: getUniqueId(),
+        startTime: '19:00',
+        endTime: '20:00',
+        day: 5,
+        projectName: 'Saturday Soccer Tournament Prep',
+        location: locations[0], // Home
+        isBooked: true,
+        parties: 3,
+        duration: 60,
+        broker: familyMembers[3], // Youssef
+        isCrossWeek: true,
+        endDay: 2, // Tournament continues on Tuesday
       }
     );
   }
