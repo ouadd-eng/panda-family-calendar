@@ -385,7 +385,6 @@ export const generateMockTimeSlots = (currentDate: Date): TimeSlot[] => {
         broker: brokers[0],
         isCrossWeek: true,
         endDay: 1, // Ends on Monday of next week
-        endTime: '14:00',
       },
       {
         id: getUniqueId(),
@@ -400,7 +399,6 @@ export const generateMockTimeSlots = (currentDate: Date): TimeSlot[] => {
         broker: brokers[1],
         isCrossWeek: true,
         endDay: 2, // Ends on Tuesday of next week
-        endTime: '12:00',
       }
     );
   } else {
@@ -620,7 +618,6 @@ export const generateMockTimeSlots = (currentDate: Date): TimeSlot[] => {
         broker: brokers[2],
         isCrossWeek: true,
         endDay: 2, // Ends on Tuesday of next week
-        endTime: '15:00',
       },
       {
         id: getUniqueId(),
@@ -635,7 +632,6 @@ export const generateMockTimeSlots = (currentDate: Date): TimeSlot[] => {
         broker: brokers[4],
         isCrossWeek: true,
         endDay: 1, // Ends on Monday of next week
-        endTime: '12:00',
       }
     );
   }
