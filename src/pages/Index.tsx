@@ -7,18 +7,21 @@ import { generateMockTimeSlots } from '@/data/mockData';
 import { RadioGroup } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { User, Calendar as CalendarIcon, Search, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { User, Calendar as CalendarIcon, Search, X, LogOut } from 'lucide-react';
 import type { TimeSlot } from '@/utils/calendarUtils';
 import { getProjectColor } from '@/utils/calendarUtils';
 import { PropertyRadioItem } from '@/components/PropertyRadioItem';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Index = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedProject, setSelectedProject] = useState<string>("ALL");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const allTimeSlots = generateMockTimeSlots(currentDate);
+  const { signOut, user } = useAuth();
   
   const projectBrokerMap = useMemo(() => {
     const map = new Map<string, string>();
@@ -98,9 +101,27 @@ const Index = () => {
     setSearchQuery("");
   };
 
+  const handleSignOut = async () => {
+    await signOut();
+  };
+
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       <div className="container mx-auto px-4 py-6 max-w-screen-2xl">
+        <div className="flex justify-between items-center mb-4">
+          <div className="flex items-center gap-2">
+            <CalendarIcon className="h-6 w-6 text-primary" />
+            <h1 className="text-xl font-semibold text-foreground">Family Calendar</h1>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-muted-foreground">Welcome, {user?.email}</span>
+            <Button variant="outline" size="sm" onClick={handleSignOut}>
+              <LogOut className="h-4 w-4 mr-2" />
+              Sign Out
+            </Button>
+          </div>
+        </div>
+        
         <CalendarHeader
           currentDate={currentDate}
           onPreviousWeek={handlePreviousWeek}
@@ -109,7 +130,7 @@ const Index = () => {
         />
         
         <div className="flex gap-6 mt-4">
-          <div className="flex-1 bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden animate-fade-in">
+          <div className="flex-1 bg-card rounded-lg shadow-sm border border-border overflow-hidden animate-fade-in">
             <WeeklyCalendar 
               currentDate={currentDate} 
               timeSlots={filteredTimeSlots}
@@ -118,7 +139,7 @@ const Index = () => {
             />
           </div>
           
-          <div className="w-64 bg-white rounded-lg shadow-sm border border-gray-200 p-4 animate-fade-in">
+          <div className="w-64 bg-card rounded-lg shadow-sm border border-border p-4 animate-fade-in">
             <div className="flex flex-col">
               <h3 className="text-lg font-medium mb-3">Properties</h3>
               
