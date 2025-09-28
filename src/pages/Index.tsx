@@ -106,136 +106,117 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <div className="container mx-auto px-4 py-6 max-w-screen-2xl">
-        <div className="flex justify-between items-center mb-4">
-          <div className="flex items-center gap-2">
-            <CalendarIcon className="h-6 w-6 text-primary" />
-            <h1 className="text-xl font-semibold text-foreground">Family Calendar</h1>
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="bg-card border-b border-border px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          <div className="flex items-center">
+            <h1 className="text-xl font-medium text-foreground tracking-tight">Family Calendar</h1>
           </div>
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-muted-foreground">Welcome, {user?.email}</span>
-            <Button variant="outline" size="sm" onClick={handleSignOut}>
-              <LogOut className="h-4 w-4 mr-2" />
+          <div className="flex items-center space-x-4">
+            <span className="text-sm text-muted-foreground font-medium hidden sm:block">Welcome, {user?.email}</span>
+            <Button onClick={handleSignOut} variant="outline" size="sm" className="h-8">
               Sign Out
             </Button>
           </div>
         </div>
+      </header>
         
-        <CalendarHeader
-          currentDate={currentDate}
-          onPreviousWeek={handlePreviousWeek}
-          onNextWeek={handleNextWeek}
-          onTodayClick={handleTodayClick}
-        />
-        
-        <div className="flex gap-6 mt-4">
-          <div className="flex-1 bg-card rounded-lg shadow-sm border border-border overflow-hidden animate-fade-in">
-            <WeeklyCalendar 
-              currentDate={currentDate} 
-              timeSlots={filteredTimeSlots}
-              projectNames={projectNames}
-              selectedProject={selectedProject}
-            />
-          </div>
-          
-          <div className="w-64 bg-card rounded-lg shadow-sm border border-border p-4 animate-fade-in">
-            <div className="flex flex-col">
-              <h3 className="text-lg font-medium mb-3">Properties</h3>
-              
-              <RadioGroup 
-                value={selectedProject} 
-                onValueChange={setSelectedProject} 
-                className="space-y-3"
-              >
-                <div className="flex items-center space-x-2">
-                  <PropertyRadioItem 
-                    value="ALL" 
-                    id="project-all" 
-                    color="#ccc"
-                  />
-                  <Label 
-                    htmlFor="project-all"
-                    className="text-sm cursor-pointer font-medium"
-                  >
-                    ALL Properties
-                  </Label>
-                </div>
-                
-                <Separator className="my-2" />
-                
-                <div className="mb-3">
-                  <div className="relative">
-                    <Input
-                      type="text"
-                      placeholder="Search properties..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full"
-                      icon={<Search className="h-4 w-4" />}
-                    />
-                    {searchQuery && (
-                      <button 
-                        onClick={handleClearSearch}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                      >
-                        <X className="h-4 w-4" />
-                      </button>
-                    )}
+      {/* Main content */}
+      <div className="flex flex-col lg:flex-row">
+        {/* Sidebar */}
+        <div className="w-full lg:w-80 bg-card border-r border-border lg:h-[calc(100vh-4rem)] overflow-y-auto">
+          <div className="p-6">
+            <div className="space-y-6">
+              {/* Project filter */}
+              <div>
+                <h3 className="text-lg font-medium text-foreground mb-4 tracking-tight">Filter by Family Member</h3>
+                <RadioGroup 
+                  value={selectedProject} 
+                  onValueChange={setSelectedProject}
+                  className="space-y-3"
+                >
+                  <div className="flex items-center space-x-3">
+                    <PropertyRadioItem value="ALL" id="all" color="#9ca3af" />
+                    <Label htmlFor="all" className="text-sm font-medium text-foreground cursor-pointer">
+                      All Family Members
+                    </Label>
                   </div>
-                  {searchQuery && filteredProjectNames.length === 0 && (
-                    <p className="text-sm text-gray-500 mt-2">No properties found</p>
+                  {filteredProjectNames.map(projectName => (
+                    <div key={projectName} className="flex items-center space-x-3">
+                      <PropertyRadioItem value={projectName} id={projectName} color={getProjectColor(projectName)} />
+                      <Label 
+                        htmlFor={projectName} 
+                        className="text-sm font-medium text-foreground cursor-pointer flex items-center"
+                      >
+                        <span 
+                          className="w-3 h-3 rounded-full mr-3" 
+                          style={{ backgroundColor: getProjectColor(projectName) }}
+                        ></span>
+                        {projectName}
+                        {brokerProjectMap.get(projectName) && (
+                          <span className="text-xs text-muted-foreground ml-2">
+                            ({brokerProjectMap.get(projectName)})
+                          </span>
+                        )}
+                      </Label>
+                    </div>
+                  ))}
+                </RadioGroup>
+              </div>
+
+              {/* Search */}
+              <div>
+                <h3 className="text-lg font-medium text-foreground mb-4 tracking-tight">Search Family Members</h3>
+                <div className="relative">
+                  <Input
+                    type="text"
+                    placeholder="Search family members..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full h-10"
+                  />
+                  {searchQuery && (
+                    <button
+                      onClick={handleClearSearch}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
                   )}
                 </div>
+
+                {searchQuery && filteredProjectNames.length === 0 && (
+                  <p className="text-sm text-muted-foreground mt-3 font-medium">
+                    No family members found matching "{searchQuery}"
+                  </p>
+                )}
                 
-                {filteredProjectNames.length > 0 ? (
-                  filteredProjectNames.map((projectName) => {
-                    const brokerName = projectBrokerMap.get(projectName);
-                    const projectColor = getProjectColor(projectName);
-                    return (
-                      <div key={projectName} className="flex flex-col">
-                        <div className="flex items-center space-x-2">
-                          <PropertyRadioItem 
-                            value={projectName} 
-                            id={`project-${projectName}`} 
-                            color={projectColor}
-                          />
-                          <Label 
-                            htmlFor={`project-${projectName}`}
-                            className="text-sm cursor-pointer font-medium"
-                          >
-                            {projectName}
-                          </Label>
-                        </div>
-                        
-                        {brokerName && (
-                          <div className="ml-6 mt-1 flex items-center text-xs text-gray-600">
-                            <User size={12} className="mr-1" />
-                            <span>{brokerName}</span>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })
-                ) : searchQuery ? (
-                  <div className="py-2 text-sm text-gray-500 italic">No matching properties</div>
-                ) : null}
-              </RadioGroup>
-              
-              {selectedProject !== "ALL" && (
-                <div className={cn(
-                  "mt-4 text-xs text-gray-600 bg-gray-50 p-2 rounded border border-gray-100",
-                  filteredProjectNames.length === 0 && "hidden"
-                )}>
-                  <div className="flex items-center mb-1">
-                    <CalendarIcon size={12} className="mr-1.5" />
-                    <span className="font-medium">Realworks Data</span>
-                  </div>
-                  Showing Realworks calendar data for {projectBrokerMap.get(selectedProject)}
-                </div>
-              )}
+                {!searchQuery && filteredProjectNames.length === 0 && (
+                  <p className="text-sm text-muted-foreground mt-3 font-medium">
+                    No family members available
+                  </p>
+                )}
+              </div>
             </div>
           </div>
+        </div>
+
+        {/* Calendar area */}
+        <div className="flex-1 p-4 lg:p-6">
+          <CalendarHeader 
+            currentDate={currentDate}
+            onPreviousWeek={handlePreviousWeek}
+            onNextWeek={handleNextWeek}
+            onTodayClick={handleTodayClick}
+          />
+          
+          <WeeklyCalendar 
+            currentDate={currentDate}
+            timeSlots={filteredTimeSlots}
+            projectNames={projectNames}
+            selectedProject={selectedProject}
+          />
         </div>
       </div>
     </div>

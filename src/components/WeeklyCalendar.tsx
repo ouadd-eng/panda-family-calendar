@@ -58,35 +58,64 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
   return (
     <div className="w-full overflow-hidden">
       {/* Day headers */}
-      <div className="grid grid-cols-[60px_repeat(5,1fr)] border-b">
+      <div className="hidden md:grid grid-cols-[60px_repeat(5,1fr)] border-b border-border">
         <div className="time-column"></div>
         {weekDays.map((day, index) => (
           <div 
             key={index} 
             className={cn(
-              "day-column p-2 text-center border-l",
+              "day-column p-3 text-center border-l border-border",
               checkIsToday(day) && "bg-calendar-today-highlight"
             )}
           >
-            <div className="text-sm uppercase font-medium text-gray-500">{formatDay(day)}</div>
+            <div className="text-xs uppercase font-medium text-muted-foreground tracking-wide">{formatDay(day)}</div>
             <div className={cn(
-              "text-2xl font-medium mt-1",
-              checkIsToday(day) ? "text-blue-500" : "text-gray-700"
+              "text-xl font-medium mt-1",
+              checkIsToday(day) ? "text-primary" : "text-foreground"
             )}>
               {formatDayNumber(day)}
             </div>
           </div>
         ))}
       </div>
+
+      {/* Mobile day selector */}
+      <div className="md:hidden border-b border-border p-4">
+        <div className="flex overflow-x-auto space-x-4 pb-2">
+          {weekDays.map((day, index) => (
+            <div 
+              key={index} 
+              className={cn(
+                "flex-shrink-0 text-center p-3 rounded-lg min-w-[80px]",
+                checkIsToday(day) ? "bg-primary text-primary-foreground" : "bg-card border border-border"
+              )}
+            >
+              <div className="text-xs uppercase font-medium tracking-wide opacity-80">{formatDay(day)}</div>
+              <div className="text-lg font-medium mt-1">{formatDayNumber(day)}</div>
+            </div>
+          ))}
+        </div>
+      </div>
       
       {/* Calendar grid */}
-      <div className="calendar-grid-container relative grid grid-cols-[60px_repeat(5,1fr)] overflow-y-auto no-scrollbar">
+      <div className="calendar-grid-container relative grid grid-cols-[60px_repeat(5,1fr)] md:grid-cols-[60px_repeat(5,1fr)] overflow-y-auto no-scrollbar">
         {/* Time labels */}
-        <div className="time-column">
+        <div className="time-column hidden md:block">
           {HOURS.map((hour) => (
-            <div key={hour} className="h-[60px] text-right pr-2 text-xs text-gray-500 font-medium relative">
-              <span className="absolute top-[-9px] right-2">
+            <div key={hour} className="h-[60px] text-right pr-3 text-xs text-muted-foreground font-medium relative">
+              <span className="absolute top-[-9px] right-3">
                 {hour === 12 ? '12:00 PM' : hour < 12 ? `${hour}:00 AM` : `${hour-12}:00 PM`}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* Mobile time labels */}
+        <div className="time-column md:hidden">
+          {HOURS.map((hour) => (
+            <div key={hour} className="h-[50px] text-right pr-2 text-xs text-muted-foreground font-medium relative">
+              <span className="absolute top-[-7px] right-2">
+                {hour === 12 ? '12PM' : hour < 12 ? `${hour}AM` : `${hour-12}PM`}
               </span>
             </div>
           ))}
@@ -97,7 +126,7 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
           <div 
             key={dayIndex} 
             className={cn(
-              "day-column relative border-l",
+              "day-column relative border-l border-border",
               checkIsToday(day) && "bg-calendar-today-highlight"
             )}
           >
@@ -105,7 +134,10 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
             {HOURS.map((hour) => (
               <div 
                 key={hour} 
-                className="h-[60px] border-b border-gray-100 cursor-pointer hover:bg-gray-50"
+                className={cn(
+                  "border-b border-border cursor-pointer hover:bg-muted/30 transition-colors",
+                  "h-[60px] md:h-[60px]" // Responsive height
+                )}
                 onClick={() => handleCellClick(day, hour)}
               ></div>
             ))}

@@ -18,6 +18,9 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', '"SF Pro Display"', '"Inter"', 'system-ui', 'sans-serif'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -62,15 +65,15 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-        calendar: {
-          booked: '#1e40af', /* Dark blue */
-          'booked-hover': '#1e3a8a', /* Slightly darker blue on hover */
-          available: '#1e40af', /* Same dark blue as booked */
-          'available-hover': '#1e3a8a', /* Same hover color as booked */
-          'broker-event': '#f3e8ff', /* Light purple */
-          'broker-event-hover': '#ede9fe', /* Slightly different light purple on hover */
-          'today-highlight': 'rgba(59, 130, 246, 0.1)',
-        }
+				"calendar-booked": "hsl(200 25% 45%)",
+				"calendar-booked-light": "hsl(195 25% 85%)",
+				"calendar-available": "hsl(160 15% 55%)",
+				"calendar-available-light": "hsl(160 15% 90%)",
+				"calendar-broker": "hsl(25 25% 65%)",
+				"calendar-broker-light": "hsl(25 25% 90%)",
+				"calendar-blocked": "hsl(0 60% 55%)",
+				"calendar-blocked-light": "hsl(0 60% 90%)",
+				"calendar-today-highlight": "hsl(195 25% 96%)",
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

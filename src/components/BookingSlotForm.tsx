@@ -15,12 +15,12 @@ interface BookingSlotFormProps {
   selectedProject?: string;
   onClose: () => void;
   onSubmit: (data: {
-    projectName: string;
+    title: string;
+    type: string;
     startTime: string;
     endTime: string;
-    firstName: string;
-    lastName: string;
-    contact: string;
+    familyMember: string;
+    notes?: string;
   }) => void;
 }
 
@@ -46,12 +46,12 @@ const BookingSlotForm: React.FC<BookingSlotFormProps> = ({
   onSubmit
 }) => {
   const [formData, setFormData] = React.useState({
-    projectName: selectedProject,
+    title: '',
+    type: selectedProject || 'Activity',
     startTime: initialStartTime,
     endTime: initialEndTime,
-    firstName: '',
-    lastName: '',
-    contact: '',
+    familyMember: 'Lisa',
+    notes: '',
   });
 
   const handleChange = (field: string, value: string) => {
@@ -66,35 +66,67 @@ const BookingSlotForm: React.FC<BookingSlotFormProps> = ({
   const timeOptions = generateTimeOptions();
   const formattedDay = day.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
 
+  const eventTypes = ['Activity', 'Appointment', 'School', 'Work', 'Sport', 'Meeting', 'Personal'];
+  const familyMembers = ['Lisa', 'Ahmed', 'Selma', 'Youssef', 'Sofia'];
+
   return (
-    <div className="p-4">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-medium">New Booking Slot</h2>
+    <div className="p-6 w-full max-w-md mx-auto">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-xl font-medium text-foreground">New Event</h2>
         <button 
-          className="rounded-full p-1.5 hover:bg-gray-100 transition-colors"
+          className="rounded-full p-1.5 hover:bg-muted transition-colors"
           onClick={onClose}
         >
           <X className="h-5 w-5" />
         </button>
       </div>
       
-      <div className="text-sm text-gray-500 mb-4">
+      <div className="text-sm text-muted-foreground mb-6 font-medium">
         {formattedDay}
       </div>
       
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-5">
         <div className="space-y-2">
-          <Label htmlFor="property">Property</Label>
+          <Label htmlFor="title" className="text-sm font-medium">Title</Label>
+          <Input 
+            id="title"
+            value={formData.title}
+            onChange={(e) => handleChange('title', e.target.value)}
+            placeholder="Event title"
+            className="h-10"
+            required
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="type" className="text-sm font-medium">Type</Label>
           <Select 
-            value={formData.projectName} 
-            onValueChange={(value) => handleChange('projectName', value)}
+            value={formData.type} 
+            onValueChange={(value) => handleChange('type', value)}
           >
-            <SelectTrigger id="property">
-              <SelectValue placeholder="Select property" />
+            <SelectTrigger id="type" className="h-10">
+              <SelectValue placeholder="Select type" />
             </SelectTrigger>
             <SelectContent>
-              {projectNames.map(name => (
-                <SelectItem key={name} value={name}>{name}</SelectItem>
+              {eventTypes.map(type => (
+                <SelectItem key={type} value={type}>{type}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="familyMember" className="text-sm font-medium">Family Member</Label>
+          <Select 
+            value={formData.familyMember} 
+            onValueChange={(value) => handleChange('familyMember', value)}
+          >
+            <SelectTrigger id="familyMember" className="h-10">
+              <SelectValue placeholder="Select family member" />
+            </SelectTrigger>
+            <SelectContent>
+              {familyMembers.map(member => (
+                <SelectItem key={member} value={member}>{member}</SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -102,13 +134,13 @@ const BookingSlotForm: React.FC<BookingSlotFormProps> = ({
         
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="startTime">Start Time</Label>
+            <Label htmlFor="startTime" className="text-sm font-medium">Start Time</Label>
             <Select
               value={formData.startTime}
               onValueChange={(value) => handleChange('startTime', value)}
             >
-              <SelectTrigger id="startTime">
-                <SelectValue placeholder="Select start time" />
+              <SelectTrigger id="startTime" className="h-10">
+                <SelectValue placeholder="Start time" />
               </SelectTrigger>
               <SelectContent>
                 {timeOptions.map(time => (
@@ -119,13 +151,13 @@ const BookingSlotForm: React.FC<BookingSlotFormProps> = ({
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="endTime">End Time</Label>
+            <Label htmlFor="endTime" className="text-sm font-medium">End Time</Label>
             <Select
               value={formData.endTime}
               onValueChange={(value) => handleChange('endTime', value)}
             >
-              <SelectTrigger id="endTime">
-                <SelectValue placeholder="Select end time" />
+              <SelectTrigger id="endTime" className="h-10">
+                <SelectValue placeholder="End time" />
               </SelectTrigger>
               <SelectContent>
                 {timeOptions
@@ -138,44 +170,23 @@ const BookingSlotForm: React.FC<BookingSlotFormProps> = ({
           </div>
         </div>
         
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="firstName">First Name</Label>
-            <Input 
-              id="firstName" 
-              value={formData.firstName}
-              onChange={(e) => handleChange('firstName', e.target.value)}
-              placeholder="John"
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="lastName">Last Name</Label>
-            <Input 
-              id="lastName" 
-              value={formData.lastName}
-              onChange={(e) => handleChange('lastName', e.target.value)}
-              placeholder="Doe"
-            />
-          </div>
-        </div>
-        
         <div className="space-y-2">
-          <Label htmlFor="contact">Email or Phone</Label>
+          <Label htmlFor="notes" className="text-sm font-medium">Notes (optional)</Label>
           <Input 
-            id="contact" 
-            value={formData.contact}
-            onChange={(e) => handleChange('contact', e.target.value)}
-            placeholder="email@example.com or +1234567890"
+            id="notes" 
+            value={formData.notes}
+            onChange={(e) => handleChange('notes', e.target.value)}
+            placeholder="Additional details..."
+            className="h-10"
           />
         </div>
         
-        <div className="pt-2 flex justify-end space-x-2">
-          <Button type="button" variant="outline" onClick={onClose}>
+        <div className="pt-4 flex justify-end space-x-3">
+          <Button type="button" variant="outline" onClick={onClose} className="h-10 px-6">
             Cancel
           </Button>
-          <Button type="submit">
-            Create Booking
+          <Button type="submit" className="h-10 px-6">
+            Create Event
           </Button>
         </div>
       </form>
