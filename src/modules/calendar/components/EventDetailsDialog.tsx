@@ -11,7 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { formatTime } from '../utils/calendarUtils';
 import { X, Trash2 } from 'lucide-react';
-import type { Event } from '../domain/types';
+import type { CalendarEvent } from '../domain/types';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,10 +24,10 @@ import {
 } from "@/components/ui/alert-dialog";
 
 interface EventDetailsDialogProps {
-  event: Event | null;
+  event: CalendarEvent | null;
   isOpen: boolean;
   onClose: () => void;
-  onUpdate: (id: string, data: Partial<Event>) => void;
+  onUpdate: (id: string, data: Partial<CalendarEvent>) => void;
   onDelete: (id: string) => void;
 }
 

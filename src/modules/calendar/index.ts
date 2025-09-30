@@ -17,16 +17,61 @@ export { default as MonthSelector } from './components/MonthSelector';
 export { useEvents } from './hooks/useEvents';
 
 // Domain types and validators
-export type { Event, EventFormData, CreateEventData, UpdateEventData } from './domain/types';
-export { validateEventData, hasTimeOverlap } from './domain/validators';
+export type { 
+  CalendarEvent,
+  EventFormData, 
+  CreateEventData, 
+  UpdateEventData,
+  Family,
+  FamilyMember,
+  GoogleAccount,
+  EventInstance,
+} from './domain/types';
+export { 
+  validateEventData, 
+  validateFamilyData,
+  validateInviteMemberData,
+  hasTimeOverlap 
+} from './domain/validators';
 
-// Data layer
+// Recurrence handling
+export { 
+  generateRRule,
+  expandRecurringEvent,
+  parseRRuleToText,
+  addExceptionDate,
+  updateRRuleForThisAndFollowing,
+} from './domain/recurrence';
+
+// Data layer - Events
 export { 
   fetchWeekEvents, 
+  fetchAllFamilyEvents,
   createEvent, 
   updateEvent, 
   deleteEvent 
 } from './data/eventRepository';
+
+// Data layer - Families
+export {
+  fetchUserFamilies,
+  createFamily,
+  updateFamily,
+  deleteFamily,
+  fetchFamilyMembers,
+  inviteFamilyMember,
+  removeFamilyMember,
+  hasFamily,
+} from './data/familyRepository';
+
+// Data layer - Google Calendar
+export {
+  fetchGoogleAccount,
+  upsertGoogleAccount,
+  updateSyncSettings,
+  updateSyncTimestamp,
+  disconnectGoogleAccount,
+} from './data/googleCalendarRepository';
 
 // Utils
 export { 

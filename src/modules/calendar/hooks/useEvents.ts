@@ -13,13 +13,14 @@ import {
 } from '../data/eventRepository';
 import { CreateEventData, UpdateEventData } from '../domain/types';
 
-export const useEvents = (currentDate: Date) => {
+export const useEvents = (currentDate: Date, familyId: string | undefined) => {
   const queryClient = useQueryClient();
 
   // Fetch events for the current week
   const { data: events = [], isLoading } = useQuery({
-    queryKey: ['events', currentDate.toISOString()],
-    queryFn: () => fetchWeekEvents(currentDate),
+    queryKey: ['events', currentDate.toISOString(), familyId],
+    queryFn: () => familyId ? fetchWeekEvents(currentDate, familyId) : Promise.resolve([]),
+    enabled: !!familyId,
   });
 
   // Create event mutation

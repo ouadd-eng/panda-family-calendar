@@ -14,43 +14,182 @@ export type Database = {
   }
   public: {
     Tables: {
-      events: {
+      calendar_event: {
         Row: {
+          all_day: boolean
           created_at: string
-          date: string
-          end_time: string
+          creator_id: string
+          description: string | null
+          end_ts: string
+          exdates: Json | null
+          family_id: string
           family_member: string
+          google_calendar_id: string | null
+          google_event_id: string | null
           id: string
+          location: string | null
           notes: string | null
-          start_time: string
+          rrule: string | null
+          source: Database["public"]["Enums"]["event_source"]
+          start_ts: string
           title: string
           type: string
+          updated_at: string
+          visibility: Database["public"]["Enums"]["event_visibility"]
+        }
+        Insert: {
+          all_day?: boolean
+          created_at?: string
+          creator_id: string
+          description?: string | null
+          end_ts: string
+          exdates?: Json | null
+          family_id: string
+          family_member: string
+          google_calendar_id?: string | null
+          google_event_id?: string | null
+          id?: string
+          location?: string | null
+          notes?: string | null
+          rrule?: string | null
+          source?: Database["public"]["Enums"]["event_source"]
+          start_ts: string
+          title: string
+          type?: string
+          updated_at?: string
+          visibility?: Database["public"]["Enums"]["event_visibility"]
+        }
+        Update: {
+          all_day?: boolean
+          created_at?: string
+          creator_id?: string
+          description?: string | null
+          end_ts?: string
+          exdates?: Json | null
+          family_id?: string
+          family_member?: string
+          google_calendar_id?: string | null
+          google_event_id?: string | null
+          id?: string
+          location?: string | null
+          notes?: string | null
+          rrule?: string | null
+          source?: Database["public"]["Enums"]["event_source"]
+          start_ts?: string
+          title?: string
+          type?: string
+          updated_at?: string
+          visibility?: Database["public"]["Enums"]["event_visibility"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "calendar_event_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "family"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      family: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      family_member: {
+        Row: {
+          created_at: string
+          family_id: string
+          id: string
+          invited_email: string | null
+          role: Database["public"]["Enums"]["family_role"]
+          status: Database["public"]["Enums"]["member_status"]
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          family_id: string
+          id?: string
+          invited_email?: string | null
+          role?: Database["public"]["Enums"]["family_role"]
+          status?: Database["public"]["Enums"]["member_status"]
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          family_id?: string
+          id?: string
+          invited_email?: string | null
+          role?: Database["public"]["Enums"]["family_role"]
+          status?: Database["public"]["Enums"]["member_status"]
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "family_member_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "family"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      google_account: {
+        Row: {
+          access_token: string | null
+          created_at: string
+          google_email: string
+          id: string
+          import_mode: string
+          refresh_token: string
+          sync_calendars: Json | null
+          synced_at: string | null
+          token_expires_at: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
+          access_token?: string | null
           created_at?: string
-          date: string
-          end_time: string
-          family_member: string
+          google_email: string
           id?: string
-          notes?: string | null
-          start_time: string
-          title: string
-          type?: string
+          import_mode?: string
+          refresh_token: string
+          sync_calendars?: Json | null
+          synced_at?: string | null
+          token_expires_at?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
+          access_token?: string | null
           created_at?: string
-          date?: string
-          end_time?: string
-          family_member?: string
+          google_email?: string
           id?: string
-          notes?: string | null
-          start_time?: string
-          title?: string
-          type?: string
+          import_mode?: string
+          refresh_token?: string
+          sync_calendars?: Json | null
+          synced_at?: string | null
+          token_expires_at?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -61,10 +200,21 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_families: {
+        Args: { target_user_id: string }
+        Returns: {
+          family_id: string
+          family_name: string
+          member_count: number
+          user_role: Database["public"]["Enums"]["family_role"]
+        }[]
+      }
     }
     Enums: {
-      [_ in never]: never
+      event_source: "local" | "google"
+      event_visibility: "public" | "family" | "busy"
+      family_role: "owner" | "member"
+      member_status: "pending" | "active"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -191,6 +341,11 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      event_source: ["local", "google"],
+      event_visibility: ["public", "family", "busy"],
+      family_role: ["owner", "member"],
+      member_status: ["pending", "active"],
+    },
   },
 } as const

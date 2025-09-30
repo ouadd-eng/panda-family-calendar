@@ -3,21 +3,21 @@ import { HOURS, getWeekDays, formatDay, formatDayNumber, checkIsToday } from '..
 import { cn } from '@/lib/utils';
 import BookingDialog from './BookingDialog';
 import EventDetailsDialog from './EventDetailsDialog';
-import type { Event } from '../domain/types';
+import type { CalendarEvent } from '../domain/types';
 import { format, isSameDay } from 'date-fns';
 import { getProjectColor } from '../utils/calendarUtils';
 
 interface WeeklyCalendarProps {
   currentDate: Date;
-  events: Event[];
+  events: CalendarEvent[];
   familyMembers: string[];
   selectedMember?: string;
-  onCreateEvent: (eventData: Omit<Event, 'id' | 'user_id' | 'created_at' | 'updated_at'>) => void;
-  onUpdateEvent: (id: string, eventData: Partial<Event>) => void;
+  onCreateEvent: (eventData: Omit<CalendarEvent, 'id' | 'creator_id' | 'created_at' | 'updated_at'>) => void;
+  onUpdateEvent: (id: string, eventData: Partial<CalendarEvent>) => void;
   onDeleteEvent: (id: string) => void;
 }
 
-interface PositionedEvent extends Event {
+interface PositionedEvent extends CalendarEvent {
   top: number;
   height: number;
   column: number;
@@ -45,7 +45,7 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
     startTime: "09:00",
     endTime: "10:00"
   });
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   
   // Convert events to positioned events for each day
   const positionedEventsByDay = useMemo(() => {

@@ -1,86 +1,91 @@
+import { EventFormData, InviteMemberFormData, FamilyFormData } from './types';
+import { z } from 'zod';
+
 /**
- * Calendar domain validation logic
+ * Validates family form data
  */
+export const familySchema = z.object({
+  name: z.string().trim().min(1, 'Family name is required').max(100, 'Family name must be less than 100 characters'),
+});
 
-import { EventFormData } from './types';
+export function validateFamilyData(data: FamilyFormData): string[] {
+  const result = familySchema.safeParse(data);
+  if (!result.success) {
+    return result.error.errors.map(err => err.message);
+  }
+  return [];
+}
 
-export interface ValidationResult {
-  isValid: boolean;
-  errors: Record<string, string>;
+/**
+ * Validates invite member form data
+ */
+export const inviteMemberSchema = z.object({
+  email: z.string().trim().email('Invalid email address').max(255, 'Email must be less than 255 characters'),
+  role: z.enum(['owner', 'member']),
+});
+
+export function validateInviteMemberData(data: InviteMemberFormData): string[] {
+  const result = inviteMemberSchema.safeParse(data);
+  if (!result.success) {
+    return result.error.errors.map(err => err.message);
+  }
+  return [];
 }
 
 /**
  * Validates event form data
  */
-export function validateEventData(data: EventFormData): ValidationResult {
-  const errors: Record<string, string> = {};
+export const eventSchema = z.object({
+  title: z.string().trim().min(1, 'Event title is required').max(200, 'Title must be less than 200 characters'),
+  description: z.string().max(2000, 'Description must be less than 2000 characters').optional(),
+  location: z.string().max(200, 'Location must be less than 200 characters').optional(),
+  familyMember: z.string().min(1, 'Family member is required'),
+  type: z.string().min(1, 'Event type is required'),
+  notes: z.string().max(1000, 'Notes must be less than 1000 characters').optional(),
+  visibility: z.enum(['public', 'family', 'busy']),
+  recurrenceType: z.enum(['none', 'daily', 'weekly', 'monthly', 'yearly', 'custom']),
+});
 
-  // Title validation
-  if (!data.title || data.title.trim().length === 0) {
-    errors.title = 'Title is required';
-  } else if (data.title.length > 100) {
-    errors.title = 'Title must be less than 100 characters';
+export function validateEventData(data: EventFormData): string[] {
+  const errors: string[] = [];
+
+  // Basic field validation
+  const result = eventSchema.safeParse(data);
+  if (!result.success) {
+    errors.push(...result.error.errors.map(err => err.message));
   }
 
-  // Type validation
-  if (!data.type) {
-    errors.type = 'Event type is required';
-  }
-
-  // Family member validation
-  if (!data.familyMember) {
-    errors.familyMember = 'Family member is required';
-  }
-
-  // Time validation
-  if (!data.startTime) {
-    errors.startTime = 'Start time is required';
-  }
-  if (!data.endTime) {
-    errors.endTime = 'End time is required';
-  }
-
-  // Start time must be before end time
-  if (data.startTime && data.endTime) {
-    const [startHour, startMin] = data.startTime.split(':').map(Number);
-    const [endHour, endMin] = data.endTime.split(':').map(Number);
-    const startMinutes = startHour * 60 + startMin;
-    const endMinutes = endHour * 60 + endMin;
-
-    if (startMinutes >= endMinutes) {
-      errors.time = 'End time must be after start time';
+  // Date validation
+  if (data.startDate && data.endDate) {
+    if (data.endDate <= data.startDate && !data.allDay) {
+      errors.push('End time must be after start time');
     }
   }
 
-  // Notes validation (optional, but limit length)
-  if (data.notes && data.notes.length > 500) {
-    errors.notes = 'Notes must be less than 500 characters';
+  // Recurrence validation
+  if (data.recurrenceType !== 'none') {
+    if (data.recurrenceEnd === 'on' && !data.recurrenceEndDate) {
+      errors.push('Recurrence end date is required');
+    }
+    if (data.recurrenceEnd === 'after' && (!data.recurrenceCount || data.recurrenceCount < 1)) {
+      errors.push('Recurrence count must be at least 1');
+    }
+    if (data.recurrenceInterval && data.recurrenceInterval < 1) {
+      errors.push('Recurrence interval must be at least 1');
+    }
   }
 
-  return {
-    isValid: Object.keys(errors).length === 0,
-    errors,
-  };
+  return errors;
 }
 
 /**
  * Checks if two time ranges overlap
  */
 export function hasTimeOverlap(
-  start1: string,
-  end1: string,
-  start2: string,
-  end2: string
+  start1: Date,
+  end1: Date,
+  start2: Date,
+  end2: Date
 ): boolean {
-  const [h1, m1] = start1.split(':').map(Number);
-  const [h2, m2] = end1.split(':').map(Number);
-  const [h3, m3] = start2.split(':').map(Number);
-  const [h4, m4] = end2.split(':').map(Number);
-
-  const start1Min = h1 * 60 + m1;
-  const end1Min = h2 * 60 + m2;
-  const start2Min = h3 * 60 + m3;
-  const end2Min = h4 * 60 + m4;
-
-  return start1Min < end2Min && start2Min < end1Min;
+  return start1 < end2 && end1 > start2;
 }

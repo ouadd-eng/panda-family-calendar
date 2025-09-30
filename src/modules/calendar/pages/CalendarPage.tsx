@@ -16,7 +16,7 @@ import { PropertyRadioItem } from '@/components/PropertyRadioItem';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
 import { useEvents } from '../hooks/useEvents';
-import type { Event, UpdateEventData } from '../domain/types';
+import type { CalendarEvent, UpdateEventData } from '../domain/types';
 
 const CalendarPage = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
