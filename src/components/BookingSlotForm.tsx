@@ -11,8 +11,8 @@ interface BookingSlotFormProps {
   day: Date;
   initialStartTime: string;
   initialEndTime: string;
-  projectNames: string[];
-  selectedProject?: string;
+  familyMembers: string[];
+  selectedMember?: string;
   onClose: () => void;
   onSubmit: (data: {
     title: string;
@@ -40,17 +40,17 @@ const BookingSlotForm: React.FC<BookingSlotFormProps> = ({
   day,
   initialStartTime,
   initialEndTime,
-  projectNames,
-  selectedProject = "",
+  familyMembers,
+  selectedMember = "",
   onClose,
   onSubmit
 }) => {
   const [formData, setFormData] = React.useState({
     title: '',
-    type: selectedProject || 'Activity',
+    type: 'Activity',
     startTime: initialStartTime,
     endTime: initialEndTime,
-    familyMember: 'Lisa',
+    familyMember: selectedMember || familyMembers[0] || 'Lisa',
     notes: '',
   });
 
@@ -67,7 +67,6 @@ const BookingSlotForm: React.FC<BookingSlotFormProps> = ({
   const formattedDay = day.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
 
   const eventTypes = ['Activity', 'Appointment', 'School', 'Work', 'Sport', 'Meeting', 'Personal'];
-  const familyMembers = ['Lisa', 'Ahmed', 'Selma', 'Youssef', 'Sofia'];
 
   return (
     <div className="p-6 w-full max-w-md mx-auto">

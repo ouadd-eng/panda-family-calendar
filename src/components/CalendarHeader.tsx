@@ -3,12 +3,14 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { formatMonth, formatWeek } from '@/utils/calendarUtils';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import MonthSelector from './MonthSelector';
 
 interface CalendarHeaderProps {
   currentDate: Date;
   onPreviousWeek: () => void;
   onNextWeek: () => void;
   onTodayClick: () => void;
+  onDateChange: (date: Date) => void;
 }
 
 const CalendarHeader: React.FC<CalendarHeaderProps> = ({
@@ -16,10 +18,11 @@ const CalendarHeader: React.FC<CalendarHeaderProps> = ({
   onPreviousWeek,
   onNextWeek,
   onTodayClick,
+  onDateChange,
 }) => {
   return (
     <div className="w-full flex flex-col space-y-4 pb-6">
-      <div className="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
         <div className="flex items-center space-x-3">
           <Button 
             variant="outline" 
@@ -47,6 +50,8 @@ const CalendarHeader: React.FC<CalendarHeaderProps> = ({
               <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
+
+          <MonthSelector currentDate={currentDate} onDateChange={onDateChange} />
         </div>
         
         <div className="sm:ml-6">

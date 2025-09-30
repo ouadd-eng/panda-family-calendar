@@ -5,6 +5,7 @@ import {
   DialogContent,
 } from '@/components/ui/dialog';
 import BookingSlotForm from './BookingSlotForm';
+import { format } from 'date-fns';
 
 interface BookingDialogProps {
   isOpen: boolean;
@@ -12,8 +13,9 @@ interface BookingDialogProps {
   day: Date;
   startTime: string;
   endTime: string;
-  projectNames: string[];
-  selectedProject?: string;
+  familyMembers: string[];
+  selectedMember?: string;
+  onCreateEvent: (eventData: any) => void;
 }
 
 const BookingDialog: React.FC<BookingDialogProps> = ({
@@ -22,12 +24,21 @@ const BookingDialog: React.FC<BookingDialogProps> = ({
   day,
   startTime,
   endTime,
-  projectNames,
-  selectedProject = "ALL",
+  familyMembers,
+  selectedMember = "ALL",
+  onCreateEvent,
 }) => {
   const handleSubmit = (data: any) => {
-    // This would actually create the booking in a real app
-    console.log('Creating booking with data:', data);
+    const eventData = {
+      title: data.title,
+      type: data.type,
+      family_member: data.familyMember,
+      start_time: data.startTime,
+      end_time: data.endTime,
+      date: format(day, 'yyyy-MM-dd'),
+      notes: data.notes,
+    };
+    onCreateEvent(eventData);
     onClose();
   };
 
@@ -38,10 +49,10 @@ const BookingDialog: React.FC<BookingDialogProps> = ({
           day={day}
           initialStartTime={startTime}
           initialEndTime={endTime}
-          projectNames={projectNames}
+          familyMembers={familyMembers}
           onClose={onClose}
           onSubmit={handleSubmit}
-          selectedProject={selectedProject !== "ALL" ? selectedProject : ""}
+          selectedMember={selectedMember !== "ALL" ? selectedMember : ""}
         />
       </DialogContent>
     </Dialog>

@@ -3,87 +3,51 @@ import React, { useState, useMemo } from 'react';
 import CalendarHeader from '@/components/CalendarHeader';
 import WeeklyCalendar from '@/components/WeeklyCalendar';
 import { addWeeks, subWeeks } from 'date-fns';
-import { generateMockTimeSlots } from '@/data/mockData';
 import { RadioGroup } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
-import { User, Calendar as CalendarIcon, Search, X, LogOut } from 'lucide-react';
+import { X } from 'lucide-react';
 import type { TimeSlot } from '@/utils/calendarUtils';
 import { getProjectColor } from '@/utils/calendarUtils';
 import { PropertyRadioItem } from '@/components/PropertyRadioItem';
 import { Input } from '@/components/ui/input';
-import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
+import { useEvents, Event } from '@/hooks/useEvents';
 
 const Index = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [selectedProject, setSelectedProject] = useState<string>("ALL");
+  const [selectedMember, setSelectedMember] = useState<string>("ALL");
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const allTimeSlots = generateMockTimeSlots(currentDate);
   const { signOut, user } = useAuth();
+  const { events, isLoading, createEvent, updateEvent, deleteEvent } = useEvents(currentDate);
   
-  const projectBrokerMap = useMemo(() => {
-    const map = new Map<string, string>();
-    allTimeSlots
-      .filter(slot => !slot.isBrokerEvent && slot.broker)
-      .forEach(slot => {
-        map.set(slot.projectName, slot.broker!);
-      });
-    return map;
-  }, [allTimeSlots]);
-  
-  const projectNames = useMemo(() => {
-    return Array.from(projectBrokerMap.keys());
-  }, [projectBrokerMap]);
-  
-  const brokerProjectMap = useMemo(() => {
-    const map = new Map<string, string>();
-    projectBrokerMap.forEach((broker, project) => {
-      map.set(broker, project);
-    });
-    return map;
-  }, [projectBrokerMap]);
-  
-  const filteredTimeSlots = useMemo(() => {
-    const filtered = allTimeSlots.filter(slot => {
-      if (selectedProject === "ALL") {
-        return !slot.isBrokerEvent;
-      }
-      
-      if (!slot.isBrokerEvent) {
-        return slot.projectName === selectedProject;
-      }
-      
-      if (slot.isBrokerEvent && slot.broker) {
-        return projectBrokerMap.get(selectedProject) === slot.broker;
-      }
-      
-      return false;
-    });
-    
-    return filtered.map(slot => {
-      if (slot.isBrokerEvent && slot.broker) {
-        const associatedProject = selectedProject !== "ALL" 
-          ? selectedProject
-          : brokerProjectMap.get(slot.broker);
-          
-        if (associatedProject) {
-          return { ...slot, associatedProject };
-        }
-      }
-      return slot;
-    });
-  }, [allTimeSlots, selectedProject, projectBrokerMap, brokerProjectMap]);
+  // Get unique family members from events
+  const familyMembers = useMemo(() => {
+    const members = new Set(events.map(e => e.family_member));
+    return Array.from(members);
+  }, [events]);
 
-  const filteredProjectNames = useMemo(() => {
-    if (!searchQuery.trim()) return projectNames;
+  // Filter events by selected member and search query
+  const filteredEvents = useMemo(() => {
+    return events.filter(event => {
+      const matchesMember = selectedMember === "ALL" || event.family_member === selectedMember;
+      const matchesSearch = !searchQuery.trim() || 
+        event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        event.family_member.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        event.type.toLowerCase().includes(searchQuery.toLowerCase());
+      
+      return matchesMember && matchesSearch;
+    });
+  }, [events, selectedMember, searchQuery]);
+
+  // Filter family members by search query
+  const filteredFamilyMembers = useMemo(() => {
+    if (!searchQuery.trim()) return familyMembers;
     
-    return projectNames.filter(name => 
-      name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (projectBrokerMap.get(name)?.toLowerCase().includes(searchQuery.toLowerCase()))
+    return familyMembers.filter(member => 
+      member.toLowerCase().includes(searchQuery.toLowerCase())
     );
-  }, [projectNames, searchQuery, projectBrokerMap]);
+  }, [familyMembers, searchQuery]);
 
   const handlePreviousWeek = () => {
     setCurrentDate(prev => subWeeks(prev, 1));
@@ -97,12 +61,21 @@ const Index = () => {
     setCurrentDate(new Date());
   };
 
+  const handleDateChange = (date: Date) => {
+    setCurrentDate(date);
+  };
+
   const handleClearSearch = () => {
     setSearchQuery("");
   };
 
   const handleSignOut = async () => {
     await signOut();
+  };
+
+  // Wrap mutation functions to match expected interface
+  const handleUpdateEvent = (id: string, eventData: Partial<Event>) => {
+    updateEvent({ id, ...eventData });
   };
 
   return (
@@ -132,8 +105,8 @@ const Index = () => {
               <div>
                 <h3 className="text-lg font-medium text-foreground mb-4 tracking-tight">Filter by Family Member</h3>
                 <RadioGroup 
-                  value={selectedProject} 
-                  onValueChange={setSelectedProject}
+                  value={selectedMember} 
+                  onValueChange={setSelectedMember}
                   className="space-y-3"
                 >
                   <div className="flex items-center space-x-3">
@@ -142,23 +115,18 @@ const Index = () => {
                       All Family Members
                     </Label>
                   </div>
-                  {filteredProjectNames.map(projectName => (
-                    <div key={projectName} className="flex items-center space-x-3">
-                      <PropertyRadioItem value={projectName} id={projectName} color={getProjectColor(projectName)} />
+                  {filteredFamilyMembers.map(member => (
+                    <div key={member} className="flex items-center space-x-3">
+                      <PropertyRadioItem value={member} id={member} color={getProjectColor(member)} />
                       <Label 
-                        htmlFor={projectName} 
+                        htmlFor={member} 
                         className="text-sm font-medium text-foreground cursor-pointer flex items-center"
                       >
                         <span 
                           className="w-3 h-3 rounded-full mr-3" 
-                          style={{ backgroundColor: getProjectColor(projectName) }}
+                          style={{ backgroundColor: getProjectColor(member) }}
                         ></span>
-                        {projectName}
-                        {brokerProjectMap.get(projectName) && (
-                          <span className="text-xs text-muted-foreground ml-2">
-                            ({brokerProjectMap.get(projectName)})
-                          </span>
-                        )}
+                        {member}
                       </Label>
                     </div>
                   ))}
@@ -186,15 +154,9 @@ const Index = () => {
                   )}
                 </div>
 
-                {searchQuery && filteredProjectNames.length === 0 && (
+                {searchQuery && (filteredFamilyMembers.length === 0 || filteredEvents.length === 0) && (
                   <p className="text-sm text-muted-foreground mt-3 font-medium">
-                    No family members found matching "{searchQuery}"
-                  </p>
-                )}
-                
-                {!searchQuery && filteredProjectNames.length === 0 && (
-                  <p className="text-sm text-muted-foreground mt-3 font-medium">
-                    No family members available
+                    No matches found for "{searchQuery}"
                   </p>
                 )}
               </div>
@@ -209,14 +171,24 @@ const Index = () => {
             onPreviousWeek={handlePreviousWeek}
             onNextWeek={handleNextWeek}
             onTodayClick={handleTodayClick}
+            onDateChange={handleDateChange}
           />
           
-          <WeeklyCalendar 
-            currentDate={currentDate}
-            timeSlots={filteredTimeSlots}
-            projectNames={projectNames}
-            selectedProject={selectedProject}
-          />
+          {isLoading ? (
+            <div className="flex items-center justify-center h-96">
+              <div className="text-muted-foreground">Loading events...</div>
+            </div>
+          ) : (
+            <WeeklyCalendar 
+              currentDate={currentDate}
+              events={filteredEvents}
+              familyMembers={Array.from(new Set(['Lisa', 'Ahmed', 'Selma', 'Youssef', 'Sofia']))}
+              selectedMember={selectedMember}
+              onCreateEvent={createEvent}
+              onUpdateEvent={handleUpdateEvent}
+              onDeleteEvent={deleteEvent}
+            />
+          )}
         </div>
       </div>
     </div>
