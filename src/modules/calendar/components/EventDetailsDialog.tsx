@@ -9,9 +9,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { formatTime } from '@/utils/calendarUtils';
+import { formatTime } from '../utils/calendarUtils';
 import { X, Trash2 } from 'lucide-react';
-import type { Event } from '@/modules/calendar/domain/types';
+import type { Event } from '../domain/types';
 import {
   AlertDialog,
   AlertDialogAction,

@@ -1,20 +1,24 @@
+/**
+ * Main Calendar Page
+ * Displays weekly calendar with events, filtering, and search
+ */
 
 import React, { useState, useMemo } from 'react';
-import CalendarHeader from '@/components/CalendarHeader';
-import WeeklyCalendar from '@/components/WeeklyCalendar';
+import CalendarHeader from '../components/CalendarHeader';
+import WeeklyCalendar from '../components/WeeklyCalendar';
 import { addWeeks, subWeeks } from 'date-fns';
 import { RadioGroup } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
-import type { TimeSlot } from '@/utils/calendarUtils';
-import { getProjectColor } from '@/utils/calendarUtils';
+import { getProjectColor } from '../utils/calendarUtils';
 import { PropertyRadioItem } from '@/components/PropertyRadioItem';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
-import { useEvents, Event } from '@/hooks/useEvents';
+import { useEvents } from '../hooks/useEvents';
+import type { Event, UpdateEventData } from '../domain/types';
 
-const Index = () => {
+const CalendarPage = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedMember, setSelectedMember] = useState<string>("ALL");
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -74,8 +78,16 @@ const Index = () => {
   };
 
   // Wrap mutation functions to match expected interface
+  const handleCreateEvent = (eventData: any) => {
+    createEvent.mutate(eventData);
+  };
+
   const handleUpdateEvent = (id: string, eventData: Partial<Event>) => {
-    updateEvent({ id, ...eventData });
+    updateEvent.mutate({ id, data: eventData as UpdateEventData });
+  };
+
+  const handleDeleteEvent = (id: string) => {
+    deleteEvent.mutate(id);
   };
 
   return (
@@ -101,7 +113,7 @@ const Index = () => {
         <div className="w-full lg:w-80 bg-card border-r border-border lg:h-[calc(100vh-4rem)] overflow-y-auto">
           <div className="p-6">
             <div className="space-y-6">
-              {/* Project filter */}
+              {/* Family member filter */}
               <div>
                 <h3 className="text-lg font-medium text-foreground mb-4 tracking-tight">Filter by Family Member</h3>
                 <RadioGroup 
@@ -184,9 +196,9 @@ const Index = () => {
               events={filteredEvents}
               familyMembers={Array.from(new Set(['Lisa', 'Ahmed', 'Selma', 'Youssef', 'Sofia']))}
               selectedMember={selectedMember}
-              onCreateEvent={createEvent}
+              onCreateEvent={handleCreateEvent}
               onUpdateEvent={handleUpdateEvent}
-              onDeleteEvent={deleteEvent}
+              onDeleteEvent={handleDeleteEvent}
             />
           )}
         </div>
@@ -195,4 +207,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default CalendarPage;

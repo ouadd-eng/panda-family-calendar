@@ -1,11 +1,11 @@
 import React, { useMemo, useState } from 'react';
-import { HOURS, getWeekDays, formatDay, formatDayNumber, checkIsToday } from '@/utils/calendarUtils';
+import { HOURS, getWeekDays, formatDay, formatDayNumber, checkIsToday } from '../utils/calendarUtils';
 import { cn } from '@/lib/utils';
 import BookingDialog from './BookingDialog';
 import EventDetailsDialog from './EventDetailsDialog';
-import type { Event } from '@/modules/calendar/domain/types';
+import type { Event } from '../domain/types';
 import { format, isSameDay } from 'date-fns';
-import { getProjectColor } from '@/utils/calendarUtils';
+import { getProjectColor } from '../utils/calendarUtils';
 
 interface WeeklyCalendarProps {
   currentDate: Date;
