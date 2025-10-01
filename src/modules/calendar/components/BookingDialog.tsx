@@ -1,11 +1,10 @@
-
 import React from 'react';
 import { 
   Dialog,
   DialogContent,
 } from '@/components/ui/dialog';
 import BookingSlotForm from './BookingSlotForm';
-import { format } from 'date-fns';
+import type { CreateEventData } from '../domain/types';
 
 interface BookingDialogProps {
   isOpen: boolean;
@@ -15,7 +14,7 @@ interface BookingDialogProps {
   endTime: string;
   familyMembers: string[];
   selectedMember?: string;
-  onCreateEvent: (eventData: any) => void;
+  onCreateEvent: (eventData: Omit<CreateEventData, 'family_id'>) => void;
 }
 
 const BookingDialog: React.FC<BookingDialogProps> = ({
@@ -29,15 +28,26 @@ const BookingDialog: React.FC<BookingDialogProps> = ({
   onCreateEvent,
 }) => {
   const handleSubmit = (data: any) => {
-    const eventData = {
+    const [startHour, startMinute] = data.startTime.split(':').map(Number);
+    const [endHour, endMinute] = data.endTime.split(':').map(Number);
+    
+    const startDate = new Date(day);
+    startDate.setHours(startHour, startMinute, 0, 0);
+    
+    const endDate = new Date(day);
+    endDate.setHours(endHour, endMinute, 0, 0);
+    
+    const eventData: Omit<CreateEventData, 'family_id'> = {
       title: data.title,
       type: data.type,
       family_member: data.familyMember,
-      start_time: data.startTime,
-      end_time: data.endTime,
-      date: format(day, 'yyyy-MM-dd'),
-      notes: data.notes,
+      start_ts: startDate.toISOString(),
+      end_ts: endDate.toISOString(),
+      all_day: false,
+      visibility: 'family',
+      notes: data.notes || undefined,
     };
+    
     onCreateEvent(eventData);
     onClose();
   };

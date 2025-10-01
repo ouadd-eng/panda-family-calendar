@@ -12,7 +12,7 @@ interface WeeklyCalendarProps {
   events: CalendarEvent[];
   familyMembers: string[];
   selectedMember?: string;
-  onCreateEvent: (eventData: Omit<CalendarEvent, 'id' | 'creator_id' | 'created_at' | 'updated_at'>) => void;
+  onCreateEvent: (eventData: Omit<import('../domain/types').CreateEventData, 'family_id'>) => void;
   onUpdateEvent: (id: string, eventData: Partial<CalendarEvent>) => void;
   onDeleteEvent: (id: string) => void;
 }

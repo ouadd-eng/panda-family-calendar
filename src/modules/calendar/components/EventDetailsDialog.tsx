@@ -84,7 +84,24 @@ const EventDetailsDialog: React.FC<EventDetailsDialogProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (event) {
-      onUpdate(event.id, formData);
+      // Convert times back to timestamps
+      const [startHour, startMinute] = formData.start_time.split(':').map(Number);
+      const [endHour, endMinute] = formData.end_time.split(':').map(Number);
+      
+      const startDate = new Date(event.start_ts);
+      startDate.setHours(startHour, startMinute, 0, 0);
+      
+      const endDate = new Date(event.start_ts);
+      endDate.setHours(endHour, endMinute, 0, 0);
+      
+      onUpdate(event.id, {
+        title: formData.title,
+        type: formData.type,
+        family_member: formData.family_member,
+        start_ts: startDate.toISOString(),
+        end_ts: endDate.toISOString(),
+        notes: formData.notes || undefined,
+      });
       onClose();
     }
   };

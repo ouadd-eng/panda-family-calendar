@@ -209,6 +209,14 @@ export type Database = {
           user_role: Database["public"]["Enums"]["family_role"]
         }[]
       }
+      is_family_member: {
+        Args: { target_family_id: string; target_user_id: string }
+        Returns: boolean
+      }
+      is_family_owner: {
+        Args: { target_family_id: string; target_user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       event_source: "local" | "google"
