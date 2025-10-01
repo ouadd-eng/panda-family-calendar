@@ -61,11 +61,16 @@ const EventDetailsDialog: React.FC<EventDetailsDialogProps> = ({
 
   React.useEffect(() => {
     if (event) {
+      const startDate = new Date(event.start_ts);
+      const endDate = new Date(event.end_ts);
+      const startTime = `${startDate.getHours().toString().padStart(2, '0')}:${startDate.getMinutes().toString().padStart(2, '0')}`;
+      const endTime = `${endDate.getHours().toString().padStart(2, '0')}:${endDate.getMinutes().toString().padStart(2, '0')}`;
+      
       setFormData({
         title: event.title,
         type: event.type,
-        start_time: event.start_time,
-        end_time: event.end_time,
+        start_time: startTime,
+        end_time: endTime,
         family_member: event.family_member,
         notes: event.notes || '',
       });
@@ -98,7 +103,7 @@ const EventDetailsDialog: React.FC<EventDetailsDialogProps> = ({
 
   if (!event) return null;
 
-  const formattedDate = new Date(event.date).toLocaleDateString('en-US', { 
+  const formattedDate = new Date(event.start_ts).toLocaleDateString('en-US', { 
     weekday: 'long', 
     month: 'long', 
     day: 'numeric' 

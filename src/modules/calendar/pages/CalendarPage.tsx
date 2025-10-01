@@ -23,7 +23,7 @@ const CalendarPage = () => {
   const [selectedMember, setSelectedMember] = useState<string>("ALL");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const { signOut, user } = useAuth();
-  const { events, isLoading, createEvent, updateEvent, deleteEvent } = useEvents(currentDate);
+  const { events, isLoading, createEvent, updateEvent, deleteEvent } = useEvents(currentDate, 'temp-family-id');
   
   // Get unique family members from events
   const familyMembers = useMemo(() => {

@@ -53,20 +53,22 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
     
     weekDays.forEach((day, dayIndex) => {
       const dayEvents = events.filter(event => 
-        isSameDay(new Date(event.date), day)
+        isSameDay(new Date(event.start_ts), day)
       );
       
       // Sort events by start time
       dayEvents.sort((a, b) => {
-        const aMinutes = parseInt(a.start_time.split(':')[0]) * 60 + parseInt(a.start_time.split(':')[1]);
-        const bMinutes = parseInt(b.start_time.split(':')[0]) * 60 + parseInt(b.start_time.split(':')[1]);
-        return aMinutes - bMinutes;
+        return new Date(a.start_ts).getTime() - new Date(b.start_ts).getTime();
       });
       
       // Calculate positions
       const positioned: PositionedEvent[] = dayEvents.map(event => {
-        const [startHour, startMinute] = event.start_time.split(':').map(Number);
-        const [endHour, endMinute] = event.end_time.split(':').map(Number);
+        const startDate = new Date(event.start_ts);
+        const endDate = new Date(event.end_ts);
+        const startHour = startDate.getHours();
+        const startMinute = startDate.getMinutes();
+        const endHour = endDate.getHours();
+        const endMinute = endDate.getMinutes();
         
         const startMinutesSince6am = (startHour - 6) * 60 + startMinute;
         const endMinutesSince6am = (endHour - 6) * 60 + endMinute;
@@ -130,7 +132,7 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
     setBookingDialogInfo(prev => ({ ...prev, isOpen: false }));
   };
   
-  const handleEventClick = (event: Event) => {
+  const handleEventClick = (event: CalendarEvent) => {
     setSelectedEvent(event);
   };
   
@@ -251,7 +253,7 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
                 >
                   <div className="font-semibold truncate">{event.title}</div>
                   <div className="truncate text-[10px] opacity-90">
-                    {formatTime(event.start_time)} - {formatTime(event.end_time)}
+                    {formatTime(format(new Date(event.start_ts), 'HH:mm'))} - {formatTime(format(new Date(event.end_ts), 'HH:mm'))}
                   </div>
                   <div className="text-[10px] mt-0.5 opacity-80 truncate">
                     {event.family_member}
