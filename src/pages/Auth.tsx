@@ -9,6 +9,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { Calendar, Users } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { z } from 'zod';
 
 const Auth = () => {
   const [signUpEmail, setSignUpEmail] = useState('');
@@ -21,6 +22,15 @@ const Auth = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  // Input validation schemas
+  const emailSchema = z.string().email("Invalid email address");
+  const passwordSchema = z.string()
+    .min(8, "Password must be at least 8 characters")
+    .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .regex(/[0-9]/, "Password must contain at least one number")
+    .regex(/[^a-zA-Z0-9]/, "Password must contain at least one special character");
+
   useEffect(() => {
     if (user) {
       navigate('/');
@@ -29,6 +39,22 @@ const Auth = () => {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate inputs
+    try {
+      emailSchema.parse(signUpEmail);
+      passwordSchema.parse(signUpPassword);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        toast({
+          title: "Validation Error",
+          description: error.errors[0].message,
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+    
     setIsLoading(true);
     
     const { error } = await signUp(signUpEmail, signUpPassword);
@@ -51,6 +77,21 @@ const Auth = () => {
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate email format
+    try {
+      emailSchema.parse(signInEmail);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        toast({
+          title: "Validation Error",
+          description: error.errors[0].message,
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+    
     setIsLoading(true);
     
     const { error } = await signIn(signInEmail, signInPassword);

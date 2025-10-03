@@ -36,12 +36,27 @@ export function validateInviteMemberData(data: InviteMemberFormData): string[] {
  * Validates event form data
  */
 export const eventSchema = z.object({
-  title: z.string().trim().min(1, 'Event title is required').max(200, 'Title must be less than 200 characters'),
-  description: z.string().max(2000, 'Description must be less than 2000 characters').optional(),
-  location: z.string().max(200, 'Location must be less than 200 characters').optional(),
+  title: z.string()
+    .trim()
+    .min(1, 'Event title is required')
+    .max(200, 'Title must be less than 200 characters'),
+  description: z.string()
+    .trim()
+    .max(2000, 'Description must be less than 2000 characters')
+    .optional(),
+  location: z.string()
+    .trim()
+    .max(500, 'Location must be less than 500 characters')
+    .optional(),
   familyMember: z.string().min(1, 'Family member is required'),
-  type: z.string().min(1, 'Event type is required'),
-  notes: z.string().max(1000, 'Notes must be less than 1000 characters').optional(),
+  type: z.string()
+    .trim()
+    .min(1, 'Event type is required')
+    .max(100, 'Type must be less than 100 characters'),
+  notes: z.string()
+    .trim()
+    .max(5000, 'Notes must be less than 5000 characters')
+    .optional(),
   visibility: z.enum(['public', 'family', 'busy']),
   recurrenceType: z.enum(['none', 'daily', 'weekly', 'monthly', 'yearly', 'custom']),
 });
