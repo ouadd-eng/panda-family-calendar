@@ -6,7 +6,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import CalendarHeader from '../components/CalendarHeader';
 import WeeklyCalendar from '../components/WeeklyCalendar';
-import FamilyOnboarding from '../components/FamilyOnboarding';
 import FamilySelector from '../components/FamilySelector';
 import InviteMemberDialog from '../components/InviteMemberDialog';
 import { addWeeks, subWeeks } from 'date-fns';
@@ -97,9 +96,6 @@ const CalendarPage = () => {
     await signOut();
   };
 
-  const handleCreateFamily = (name: string) => {
-    createFamily.mutate(name);
-  };
 
   const handleInviteMember = (email: string) => {
     if (selectedFamilyId) {
@@ -128,6 +124,21 @@ const CalendarPage = () => {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-muted-foreground">Loading...</div>
+      </div>
+    );
+  }
+
+  // Show welcome screen if no families
+  if (families.length === 0) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center space-y-4 p-8">
+          <h2 className="text-2xl font-semibold text-foreground">Welcome to Family Calendar</h2>
+          <p className="text-muted-foreground">Create your first family to get started</p>
+          <Button onClick={() => navigate('/settings')}>
+            Go to Settings
+          </Button>
+        </div>
       </div>
     );
   }
@@ -287,11 +298,6 @@ const CalendarPage = () => {
           </div>
         </div>
       </div>
-
-      <FamilyOnboarding
-        isOpen={families.length === 0 && !familiesLoading}
-        onCreateFamily={handleCreateFamily}
-      />
 
       <InviteMemberDialog
         isOpen={showInviteDialog}
