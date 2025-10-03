@@ -13,7 +13,8 @@ import { addWeeks, subWeeks } from 'date-fns';
 import { RadioGroup } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { X, UserPlus } from 'lucide-react';
+import { X, UserPlus, Settings } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { getProjectColor } from '../utils/calendarUtils';
 import { PropertyRadioItem } from '@/components/PropertyRadioItem';
 import { Input } from '@/components/ui/input';
@@ -29,6 +30,7 @@ const CalendarPage = () => {
   const [selectedFamilyId, setSelectedFamilyId] = useState<string | undefined>();
   const [showInviteDialog, setShowInviteDialog] = useState(false);
   
+  const navigate = useNavigate();
   const { signOut, user } = useAuth();
   const { families, isLoading: familiesLoading, createFamily, inviteMember } = useFamilies();
   const { events, isLoading: eventsLoading, createEvent, updateEvent, deleteEvent } = useEvents(
@@ -160,6 +162,15 @@ const CalendarPage = () => {
                   <span className="hidden sm:inline">Invite</span>
                 </Button>
               )}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate('/settings')}
+                className="h-8"
+              >
+                <Settings className="w-4 h-4 sm:mr-2" />
+                <span className="hidden sm:inline">Settings</span>
+              </Button>
               <span className="text-sm text-muted-foreground font-medium hidden md:block">
                 {user?.email}
               </span>
