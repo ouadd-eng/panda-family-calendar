@@ -50,6 +50,7 @@ export async function fetchUserFamilies(): Promise<Family[]> {
 
 /**
  * Creates a new family and adds the creator as owner
+ * Uses a database function to handle this atomically and bypass RLS issues
  */
 export async function createFamily(name: string): Promise<Family> {
   const { data: { user } } = await supabase.auth.getUser();
@@ -58,31 +59,25 @@ export async function createFamily(name: string): Promise<Family> {
     throw new Error('User not authenticated');
   }
 
-  // Create family
-  const { data: family, error: familyError } = await supabase
-    .from('family')
-    .insert([{ name }])
-    .select()
-    .single();
+  // Call the database function to create family with owner
+  const { data: familyId, error: rpcError } = await supabase
+    .rpc('create_family_with_owner', { family_name: name });
 
-  if (familyError) {
-    console.error('Error creating family:', familyError);
-    throw familyError;
+  if (rpcError) {
+    console.error('Error creating family:', rpcError);
+    throw rpcError;
   }
 
-  // Add creator as owner
-  const { error: memberError } = await supabase
-    .from('family_member')
-    .insert([{
-      family_id: family.id,
-      user_id: user.id,
-      role: 'owner',
-      status: 'active',
-    }]);
+  // Fetch the created family
+  const { data: family, error: fetchError } = await supabase
+    .from('family')
+    .select('*')
+    .eq('id', familyId)
+    .single();
 
-  if (memberError) {
-    console.error('Error adding family owner:', memberError);
-    throw memberError;
+  if (fetchError) {
+    console.error('Error fetching created family:', fetchError);
+    throw fetchError;
   }
 
   return family as Family;

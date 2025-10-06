@@ -200,6 +200,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_family_with_owner: {
+        Args: { family_name: string }
+        Returns: string
+      }
       get_user_families: {
         Args: { target_user_id: string }
         Returns: {
