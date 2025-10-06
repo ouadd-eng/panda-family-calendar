@@ -9,9 +9,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { formatTime } from '../utils/calendarUtils';
-import { X, Trash2 } from 'lucide-react';
+import { X, Trash2, Repeat } from 'lucide-react';
 import type { CalendarEvent } from '../domain/types';
+import { parseRRuleToText } from '../domain/recurrence';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -58,6 +60,8 @@ const EventDetailsDialog: React.FC<EventDetailsDialogProps> = ({
     notes: '',
   });
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
+  const [editScope, setEditScope] = React.useState<'this' | 'thisAndFollowing' | 'all'>('this');
+  const isRecurringEvent = event?.rrule ? true : false;
 
   React.useEffect(() => {
     if (event) {
@@ -145,6 +149,12 @@ const EventDetailsDialog: React.FC<EventDetailsDialogProps> = ({
             
             <div className="text-sm text-muted-foreground mb-6 font-medium">
               {formattedDate}
+              {isRecurringEvent && (
+                <div className="flex items-center gap-2 mt-2 text-primary">
+                  <Repeat className="h-3 w-3" />
+                  <span className="text-xs">{parseRRuleToText(event.rrule!)}</span>
+                </div>
+              )}
             </div>
             
             <form onSubmit={handleSubmit} className="space-y-5">
@@ -242,6 +252,27 @@ const EventDetailsDialog: React.FC<EventDetailsDialogProps> = ({
                   className="h-10"
                 />
               </div>
+
+              {/* Edit scope for recurring events */}
+              {isRecurringEvent && (
+                <div className="space-y-3 pt-2 border-t border-border">
+                  <Label className="text-sm font-medium">Edit recurring event</Label>
+                  <RadioGroup value={editScope} onValueChange={(value: any) => setEditScope(value)}>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="this" id="this" />
+                      <Label htmlFor="this" className="font-normal cursor-pointer">This event only</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="thisAndFollowing" id="thisAndFollowing" />
+                      <Label htmlFor="thisAndFollowing" className="font-normal cursor-pointer">This and following events</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="all" id="all" />
+                      <Label htmlFor="all" className="font-normal cursor-pointer">All events in the series</Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+              )}
               
               <div className="pt-4 flex justify-between">
                 <Button 

@@ -3,9 +3,11 @@ import { HOURS, getWeekDays, formatDay, formatDayNumber, checkIsToday } from '..
 import { cn } from '@/lib/utils';
 import BookingDialog from './BookingDialog';
 import EventDetailsDialog from './EventDetailsDialog';
-import type { CalendarEvent } from '../domain/types';
-import { format, isSameDay } from 'date-fns';
+import type { CalendarEvent, EventInstance } from '../domain/types';
+import { format, isSameDay, startOfWeek, endOfWeek } from 'date-fns';
 import { getProjectColor } from '../utils/calendarUtils';
+import { expandRecurringEvent } from '../domain/recurrence';
+import { Repeat } from 'lucide-react';
 
 interface WeeklyCalendarProps {
   currentDate: Date;
@@ -17,7 +19,7 @@ interface WeeklyCalendarProps {
   onDeleteEvent: (id: string) => void;
 }
 
-interface PositionedEvent extends CalendarEvent {
+interface PositionedEvent extends EventInstance {
   top: number;
   height: number;
   column: number;
@@ -47,12 +49,21 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
   });
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   
-  // Convert events to positioned events for each day
+  // Expand recurring events and convert to positioned events for each day
   const positionedEventsByDay = useMemo(() => {
     const eventsByDay: Record<number, PositionedEvent[]> = {};
+    const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 });
+    const weekEnd = endOfWeek(currentDate, { weekStartsOn: 0 });
+    
+    // Expand all recurring events into instances
+    const allInstances: EventInstance[] = [];
+    events.forEach(event => {
+      const instances = expandRecurringEvent(event, weekStart, weekEnd);
+      allInstances.push(...instances);
+    });
     
     weekDays.forEach((day, dayIndex) => {
-      const dayEvents = events.filter(event => 
+      const dayEvents = allInstances.filter(event => 
         isSameDay(new Date(event.start_ts), day)
       );
       
@@ -251,7 +262,10 @@ const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
                   }}
                   onClick={() => handleEventClick(event)}
                 >
-                  <div className="font-semibold truncate">{event.title}</div>
+                  <div className="flex items-center gap-1">
+                    {event.isRecurring && <Repeat className="h-3 w-3 flex-shrink-0" />}
+                    <div className="font-semibold truncate">{event.title}</div>
+                  </div>
                   <div className="truncate text-[10px] opacity-90">
                     {formatTime(format(new Date(event.start_ts), 'HH:mm'))} - {formatTime(format(new Date(event.end_ts), 'HH:mm'))}
                   </div>
